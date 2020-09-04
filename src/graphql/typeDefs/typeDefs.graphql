@@ -1,0 +1,108 @@
+type User {
+  id: ID!
+  email: String!
+  password: String!
+  username: String!
+  name: String
+  posts: [Post]
+  profile: Profile
+  avatar: Avatar
+  comments: [Comment]
+}
+
+type Profile {
+  id: ID!
+  bio: String
+  user: User!
+  userId: Int
+}
+
+type Avatar {
+  id: ID!
+  filename: String!
+  mimetype: String
+  encoding: String
+  user: User!
+  userId: Int
+}
+
+type Post {
+  id: ID!
+  createdAt: DateTime
+  title: String!
+  description: String
+  likes: Int!
+  published: Boolean!
+  author: User
+  authorId: Int
+  postImage: PostImage
+  comments: [Comment]
+}
+
+type PostImage {
+  id: ID!
+  filename: String!
+  mimetype: String
+  encoding: String
+  postId: ID
+}
+
+type Auth {
+  username: String!
+  userimage: String!
+  email: String!
+  token: String
+}
+
+type Comment {
+  id: ID!
+  createdAt: DateTime
+  author: User
+  authorId: Int
+  postId: Int
+  comment: String!
+}
+
+type Token {
+  id: ID!
+  email: String
+  user: String
+  userImage: String
+  iat: Int
+  exp: Int
+}
+
+type Query {
+  users: [User!]
+  user(id: ID!): User
+  post(id: ID!): Post
+  posts: [Post!]
+  checkAuth(token: String): String
+}
+
+type Mutation {
+  createUser(
+    email: String!
+    password: String!
+    name: String
+    username: String!
+    bio: String
+    avatar: Upload
+  ): User
+
+  login(email: String!, password: String!): Auth
+
+  createPost(id: ID!, title: String!, description: String!, image: Upload): Post
+
+  addLike(id: ID!): Int
+  removeLike(id: ID!): Int
+
+  removePost(id: ID!): String
+}
+
+type Subscription {
+  postCreated: Post!
+  postLike: Post!
+  postDeslike: Post!
+  postRemoved: String
+}

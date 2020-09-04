@@ -1,0 +1,24 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+
+# production
+/build
+
+.editorconfig
+.eslintignore
+.eslintrc.json
+.prettierrc
+
+#prisma
+/prisma/migrations
+/prisma/Studio
+
+# debug
+yarn-debug.log*
+yarn-error.log*
+
+# local env files
+.env
+
