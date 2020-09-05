@@ -1,0 +1,15 @@
+#main
+/node_modules
+
+#prisma
+prisma
+
+#configurations
+.editorconfig
+.eslintignore
+.eslintrc.json
+.gitignore
+tsconfig.json
+
+yarn.lock
+yarn-error.log

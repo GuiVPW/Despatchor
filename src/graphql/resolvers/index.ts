@@ -1,40 +1,65 @@
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-
 import { prisma } from '../../../index'
-
 import authConfig from '../../config/auth.json'
-
-import { PubSub } from 'apollo-server'
-
-const pubsub = new PubSub()
+import {
+  POST_CREATED,
+  POST_LIKES,
+  POST_REMOVED,
+  POST_EDITED,
+  pubsub
+} from '../../constants/subscriptions'
+import { storeUpload } from '../../utils/storeUpload'
 
 const resolvers = {
   Query: {
-    users: () => prisma.user.findMany(),
-    user: (_, { id }) => {
-      return prisma.user.findOne({ where: { id } })
+    users: async () => prisma.user.findMany(),
+    user: async (_, { id }) => {
+      const user = await prisma.user.findOne({ where: { id } })
+      return user
     },
 
-    post: (_, { id }) => {
-      return prisma.post.findOne({ where: { id } })
+    post: async (_, { id }) => {
+      const post = await prisma.post.findOne({ where: { id } })
+      return post
     },
 
-    posts: () => prisma.post.findMany(),
+    posts: async () => prisma.post.findMany(),
 
     checkAuth: async (_, { token }) => {
       try {
         if (token === '') {
-          return false
+          throw new Error('Nenhum token enviado.')
         }
 
-        jwt.verify(token, authConfig.secret, (err, decoded) => {
+        const verify = jwt.verify(token, authConfig.secret, (err, decoded) => {
           if (err) {
-            throw new Error('Esse jwt não é válido')
+            throw new Error('Esse jwt não é válido.')
           } else {
-            return decoded
+            const token = jwt.sign(
+              {
+                id: decoded.id,
+                email: decoded.email,
+                username: decoded.username
+              },
+              authConfig.secret,
+              {
+                expiresIn: '86400'
+              }
+            )
+
+            const jwtToken = {
+              id: decoded.id,
+              username: decoded.username,
+              email: decoded.email,
+              token
+            }
+
+            return jwtToken
           }
         })
+
+        return verify
       } catch (e) {
         throw new Error(e)
       }
@@ -42,7 +67,10 @@ const resolvers = {
   },
 
   Mutation: {
-    createUser: async (_, { email, password, name, username, bio }) => {
+    createUser: async (
+      _,
+      { email, password, name, username, bio, avatarUrl }
+    ) => {
       try {
         if (
           await prisma.user.findOne({
@@ -51,17 +79,30 @@ const resolvers = {
         ) {
           throw new Error('Erro: email já utilizado.')
         }
+
+        if (avatarUrl) {
+          const { createReadStream, filename } = await avatarUrl
+          console.log(avatarUrl)
+          const stream = createReadStream()
+          var { path } = await storeUpload({
+            stream,
+            filename,
+            id: avatarUrl.id,
+            folder: 'users'
+          })
+        }
         const user = await prisma.user.create({
           data: {
             email,
             password: bcrypt.hashSync(password, 10),
             username,
+            avatarUrl: path,
+            name,
             profile: {
               create: {
                 bio
               }
-            },
-            name
+            }
           }
         })
 
@@ -72,28 +113,46 @@ const resolvers = {
       }
     },
 
+    deleteUser: async (_, { id }) => {
+      try {
+        const user = await prisma.user.findOne({
+          where: { id },
+          include: { profile: true, posts: true }
+        })
+
+        if (user.profile !== null)
+          await prisma.profile.delete({ where: { userId: id } })
+        if (user.posts.length !== 0) await prisma.post.delete({ where: { id } })
+
+        const userDelete = await prisma.user.delete({
+          where: { id }
+        })
+        if (!user) throw new Error('Não foi possível excluir o usuário!')
+        return 'Usuário deletado com sucesso!'
+      } catch (e) {
+        throw new Error(e)
+      }
+    },
+
     login: async (_, { email, password }) => {
       try {
-        const encryptedPassword = bcrypt.hashSync(password, 10)
-
         const user = await prisma.user.findOne({
           where: {
             email
-          },
-          include: { avatar: true }
+          }
         })
 
         if (!user) return new Error('Erro: email não encontrado!')
 
-        if (!(await bcrypt.compare(encryptedPassword, user.password)))
+        if (!(await bcrypt.compare(password, user.password)))
           return new Error('Erro: senha incorreta!')
 
         const token = jwt.sign(
           {
-            _id: user.id,
+            id: user.id,
             email: user.email,
-            user: user.username,
-            avatar: user.avatar.filename
+            username: user.username,
+            image: user.avatarUrl
           },
           authConfig.secret,
           {
@@ -102,9 +161,10 @@ const resolvers = {
         )
 
         const jwtToken = {
-          username: user.username,
-          userimage: user.avatar.filename,
+          id: user.id,
           email: user.email,
+          username: user.username,
+          image: user.avatarUrl,
           token
         }
 
@@ -113,40 +173,101 @@ const resolvers = {
         return e
       }
     },
-    createPost: async (_, { id, title, description, image }) => {
+    createPost: async (_, { id, title, description, imageUrl }) => {
       try {
-        try {
-          const user = await prisma.user.findOne({ where: { id } })
-          if (!user) throw new Error('Usuário não encontrado!')
+        const user = await prisma.user.findOne({ where: { id } })
+        if (!user) throw new Error('Usuário não encontrado!')
 
-          const post = await prisma.post.create({
-            data: {
-              author: {
-                connect: {
-                  id
-                }
-              },
-              title,
-              description,
-              postImage: {
-                create: image
-              },
-              published: true,
-              createdAt: new Date()
-            }
+        if (imageUrl) {
+          const { createReadStream, filename } = await imageUrl
+          const stream = createReadStream()
+          var { path } = await storeUpload({
+            stream,
+            filename,
+            id: imageUrl.id,
+            folder: 'users'
           })
-
-          pubsub.publish('POST_CREATED', {
-            post
-          })
-
-          return post
-        } catch (e) {
-          return new Error(e)
         }
+        const post = await prisma.post.create({
+          data: {
+            author: {
+              connect: {
+                id
+              }
+            },
+            title,
+            description,
+            postImageUrl: path,
+            published: true,
+            createdAt: new Date()
+          }
+        })
+
+        pubsub.publish(POST_CREATED, { postCreated: post })
+
+        console.log(post)
+
+        return post
       } catch (e) {
         console.log(e)
         return e
+      }
+    },
+
+    editPost: async (_, { id, title, description, imageUrl }) => {
+      try {
+        const post = await prisma.post.findOne({
+          where: {
+            id
+          }
+        })
+
+        if (!post) throw new Error('Esse post não existe!')
+
+        if (imageUrl) {
+          const { createReadStream, filename } = await imageUrl
+          const stream = createReadStream()
+          var { path } = await storeUpload({
+            stream,
+            filename,
+            id: post.id,
+            folder: 'posts'
+          })
+        }
+
+        const postUpdated = await prisma.post.update({
+          where: { id },
+          data: {
+            description,
+            title,
+            postImageUrl: path
+          }
+        })
+
+        pubsub.publish(POST_EDITED, { postRemoved: post })
+
+        return postUpdated
+      } catch (e) {
+        throw new Error('Falha na remoção')
+      }
+    },
+
+    removePost: async (_, { id }) => {
+      try {
+        const postId = await prisma.post.findOne({
+          where: {
+            id
+          }
+        })
+
+        if (!postId) throw new Error('Post não existe!')
+        const post = await prisma.post.delete({ where: { id } })
+
+        pubsub.publish(POST_REMOVED, { postRemoved: post })
+
+        return 'Removido com sucesso'
+      } catch (e) {
+        throw new Error('Falha na remoção')
       }
     },
 
@@ -167,13 +288,14 @@ const resolvers = {
           }
         })
 
-        pubsub.publish('POST_LIKED', { postLiked: post })
+        pubsub.publish(POST_LIKES, { postLikes: post })
 
         return post.likes
       } catch (e) {
         throw new Error('Houve um problema, tente novamente')
       }
     },
+
     removeLike: async (_, { id }) => {
       try {
         const postId = await prisma.post.findOne({
@@ -191,44 +313,26 @@ const resolvers = {
           }
         })
 
-        pubsub.publish('POST_DESLIKED', { postDesliked: post })
+        console.log(post)
 
-        return post
+        pubsub.publish(POST_LIKES, { postLikes: post })
+
+        return post.likes
       } catch (e) {
         throw new Error('Houve um problema, tente novamente')
-      }
-    },
-
-    removePost: async (_, { id }) => {
-      try {
-        const postId = await prisma.post.findOne({
-          where: {
-            id
-          }
-        })
-        const post = await prisma.post.delete({ where: { id } })
-
-        pubsub.publish('POST_REMOVED', { postRemoved: post })
-
-        return 'Removido com sucesso'
-      } catch (e) {
-        throw new Error('Falha na remoção')
       }
     }
   },
 
   Subscription: {
     postCreated: {
-      subscribe: () => pubsub.asyncIterator('POST_CREATED')
+      subscribe: () => pubsub.asyncIterator(POST_CREATED)
     },
-    postLike: {
-      subscribe: () => pubsub.asyncIterator('POST_LIKED')
-    },
-    postDeslike: {
-      subscribe: () => pubsub.asyncIterator('POST_DESLIKED')
+    postLikes: {
+      subscribe: () => pubsub.asyncIterator(POST_LIKES)
     },
     postRemoved: {
-      subscribe: () => pubsub.asyncIterator('POST_REMOVED')
+      subscribe: () => pubsub.asyncIterator(POST_REMOVED)
     }
   }
 }
