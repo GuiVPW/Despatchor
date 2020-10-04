@@ -2,8 +2,9 @@
   "name": "despatchor",
   "description": "A Social Network of images",
   "version": "0.5.0",
+  "license": "MIT",
   "engines": {
-    "node": "14.7.0"
+    "node": "14.13.0"
   },
   "dependencies": {
     "@material-ui/core": "^4.10.0",
