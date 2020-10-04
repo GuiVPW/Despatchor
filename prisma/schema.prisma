@@ -17,6 +17,7 @@ model User {
   posts     Post[]
   profile   Profile?
   comment   Comment[]
+  Post      Post[]    @relation("author")
 }
 
 model Profile {
@@ -31,12 +32,14 @@ model Post {
   createdAt    DateTime  @default(now())
   title        String
   description  String?
-  likes        Int       @default(0)
   published    Boolean   @default(false)
-  author       User      @relation(fields: [authorId], references: [id])
+  author       User      @relation("author", fields: [authorId], references: [id])
   authorId     Int
   postImageUrl String?
   comment      Comment[]
+  likes        Int       @default(0)
+  userLiked    User?     @relation(fields: [userlikedId], references: [id])
+  userlikedId  Int?
 }
 
 model Comment {

@@ -1,11 +1,11 @@
 import express from 'express'
 import { PrismaClient } from '@prisma/client'
-import resolvers from './src/graphql/resolvers'
-import typeDefs from './src/graphql/typeDefs'
+import resolvers from './graphql/resolvers'
+import typeDefs from './graphql/typeDefs'
 import path from 'path'
 import { createServer } from 'http'
-import { APOLLO_OPTIONS, HTTP_PORT } from './src/config/apollo'
-import { pubsub } from './src/constants/subscriptions'
+import { APOLLO_OPTIONS, HTTP_PORT } from './config/apollo'
+import { pubsub } from './constants/subscriptions'
 import { ApolloServer } from 'apollo-server-express'
 
 const app = express()
@@ -30,10 +30,10 @@ const server = new ApolloServer({
 
 app.use('/img', express.static(path.resolve(__dirname, 'uploads')))
 
-// app.use(express.static(path.resolve(__dirname, 'static')))
+app.use(express.static(path.resolve(__dirname, './app/build')))
 
 // app.get('/*', (_req, res) => {
-//   res.sendFile(path.join(__dirname, 'public/index.html'))
+//   res.sendFile(path.join(__dirname, './app/public/index.html'))
 // })
 
 server.applyMiddleware({ app, path: '/graphql', cors: true })

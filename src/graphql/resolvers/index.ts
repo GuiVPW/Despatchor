@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import { prisma } from '../../../index'
+import { prisma } from '../../index'
 import authConfig from '../../config/auth.json'
 import {
   POST_CREATED,
@@ -13,9 +13,12 @@ import { storeUpload } from '../../utils/storeUpload'
 
 const resolvers = {
   Query: {
-    users: async () => prisma.user.findMany(),
+    users: async () => prisma.user.findMany({ include: { profile: true } }),
     user: async (_, { id }) => {
-      const user = await prisma.user.findOne({ where: { id } })
+      const user = await prisma.user.findOne({
+        where: { id },
+        include: { profile: true, posts: true }
+      })
       return user
     },
 
@@ -271,26 +274,43 @@ const resolvers = {
       }
     },
 
-    addLike: async (_, { id }) => {
+    addLike: async (_, { id, postId }) => {
       try {
-        const postId = await prisma.post.findOne({
+        const userLiked = await prisma.post.findOne({
           where: {
-            id
-          }
-        })
-
-        const post = await prisma.post.update({
-          data: {
-            likes: postId.likes + 1
+            id: postId
           },
-          where: {
-            id
+          include: {
+            likeUsers: {
+              select: {
+                id
+              }
+            }
           }
         })
 
-        pubsub.publish(POST_LIKES, { postLikes: post })
-
-        return post.likes
+        if (!userLiked.likeUsers.id) {
+          const post = await prisma.post.findOne({
+            where: {
+              id: postId
+            }
+          })
+          const postLikes = await prisma.post.update({
+            data: {
+              likes: post.likes + 1,
+              likeUsers: {
+                connect: {
+                  id
+                }
+              }
+            },
+            where: {
+              id
+            }
+          })
+          await pubsub.publish(POST_LIKES, { postLikes })
+          return post.likes
+        }
       } catch (e) {
         throw new Error('Houve um problema, tente novamente')
       }

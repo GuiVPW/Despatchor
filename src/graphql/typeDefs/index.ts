@@ -80,7 +80,7 @@ const typeDefs = gql`
 
     editPost(id: Int!, title: String!, description: String!): Post
 
-    addLike(id: Int!): Int
+    addLike(id: Int!, postId: Int!): Int
     removeLike(id: Int!): Int
 
     removePost(id: Int!): String
