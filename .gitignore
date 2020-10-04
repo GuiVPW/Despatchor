@@ -6,11 +6,6 @@
 # production
 /build
 
-.editorconfig
-.eslintignore
-.eslintrc.json
-.prettierrc
-
 #prisma
 /prisma/migrations
 /prisma/Studio
