@@ -24,6 +24,7 @@ export const storeUpload = async ({
     `${id}.${ext}`
   )
   const tempFile = path.join(__dirname, '../../uploads/temp', `${id}.${ext}`)
+
   return new Promise((resolve, reject) =>
     stream
       .pipe(createWriteStream(tempFile))
