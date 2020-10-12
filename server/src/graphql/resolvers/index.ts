@@ -1,26 +1,26 @@
-import {
-  POST_CREATED,
-  POST_LIKES,
-  POST_REMOVED,
-  pubsub
-} from '../../constants/subscriptions'
-import Query from './queries'
-import Mutation from './mutations'
+import { DateTimeResolver as DateTime } from 'graphql-scalars'
+
+import users from './users'
+import posts from './posts'
+import auth from './auth'
 
 const resolvers = {
-  Query,
-  Mutation,
+  ...users,
+  ...posts,
+  ...auth,
+  Query: {
+    ...users.Query,
+    ...posts.Query,
+    ...auth.Query
+  },
+  Mutation: {
+    ...users.Mutation,
+    ...posts.Mutation
+  },
   Subscription: {
-    postCreated: {
-      subscribe: () => pubsub.asyncIterator(POST_CREATED)
-    },
-    postLikes: {
-      subscribe: () => pubsub.asyncIterator(POST_LIKES)
-    },
-    postRemoved: {
-      subscribe: () => pubsub.asyncIterator(POST_REMOVED)
-    }
-  }
+    ...posts.Subscription
+  },
+  DateTime
 }
 
 export default resolvers
