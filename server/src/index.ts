@@ -7,8 +7,11 @@ import { APOLLO_OPTIONS, HTTP_PORT } from './config/apollo'
 import { pubsub } from './constants/subscriptions'
 import { ApolloServer } from 'apollo-server-express'
 import typeDefs from './graphql/typeDefs'
+import dotenv from 'dotenv'
 
-const app = express()
+dotenv.config()
+
+export const app = express()
 
 export const prisma = new PrismaClient()
 

@@ -2,234 +2,155 @@ interface User {
   id: number
   name: string
 }
-export const Mail = ({ id, name }: User): string => {
-  return `<table width="100%" height="100%" align="center" border="0" cellpadding="0" cellspacing="0"
-	style="background-color:#1a1e2c;border:0;border-collapse:collapse;border-spacing:0;vertical-align: center;"
-	bgcolor="#1a1e2c">
+export const mail = ({ id, name }: User): string => {
+  return `
+  <table width="100%" height="100%" align="center" border="0" cellpadding="0" cellspacing="0"
+	style="background-color:#FFF;border:0;border-collapse:collapse;border-spacing:0;vertical-align: center;"
+	bgcolor="#FFF">
 	<style>
-		@import url('https://fonts.googleapis.com/css?family=Nunito+Sans&display=swap');
+    @import url('https://fonts.googleapis.com/css?family=Roboto&display=swap');
 	</style>
-	<tbody>
-		<tr>
-			<td align="center" style="display:block">
-
-				<table width="100%" height="100%" border="0" cellpadding="0" cellspacing="0"
-					style="border:0;border-collapse:collapse;border-spacing:0;max-width:700px">
-					<tbody>
-						<tr>
-							<td style="background-color:#0A0E13">
-
-								<table width="100%" border="0" cellpadding="0" cellspacing="0"
-									style="border:none;border-collapse:collapse;border-spacing:0;width:100%">
-									<tbody>
-										<tr>
-											<td align="center"
-												style="direction:ltr;text-align:center;padding:10px 14px 10px 14px;padding-center:0;background-color:#0A0E13"
-												bgcolor="#0A0E13">
-
-												<table border="0" cellpadding="0" cellspacing="0"
-													style="border:none;border-collapse:collapse;border-spacing:0;width:100%">
-													<tbody>
-														<tr>
-															<td style="direction:ltr;text-align:center;font-size:0">
-
-																<table border="0" cellpadding="0" cellspacing="0" class="m_-5732199361944882318t11of12"
-																	style="border:none;border-collapse:collapse;border-spacing:0;max-width:616px;width:100%;display:inline-block;vertical-align:middle">
-																	<tbody>
-																		<tr>
-																			<td style="direction:ltr;text-align:center;padding-center:0;padding-right:0">
-																				<table border="0" cellpadding="0" cellspacing="0" width="100%" align="center"
-																					style="border:none;border-collapse:collapse;border-spacing:0;table-layout:fixed;width:100%">
-																					<tbody>
-																						<tr>
-																							<td style="direction:ltr;text-align:left;font-size:0">
-
-																								<table border="0" cellpadding="0" cellspacing="0"
-																									class="m_-5732199361944882318t4of12"
-																									style="border:none;border-collapse:collapse;border-spacing:0;display:inline-block;max-width:408px;vertical-align:middle;width:100%">
-																									<tbody>
-																										<tr>
-																											<td
-																												style="direction:ltr;text-align:center;padding-center:12px;padding-right:12px">
-																												<table border="0" cellpadding="0" cellspacing="0" width="100%"
-																													align="left"
-																													style="border:none;border-collapse:collapse;border-spacing:0;table-layout:fixed;width:100%">
-																													<tbody>
-																														<tr>
-																															<td style="direction:ltr;text-align:left;font-size:0">
-
-																																<table border="0" cellpadding="0" cellspacing="0"
-																																	width="100%" align="left"
-																																	style="border:none;border-collapse:collapse;border-spacing:0;table-layout:fixed;width:100%">
-																																	<tbody>
-																																		<tr>
-																																			<td
-																																				style="direction:ltr;text-align:left;color:#000000;font-family:'UberMoveText-Regular','HelveticaNeue',Helvetica,Arial,sans-serif;font-size:0;line-height:26px;padding-bottom:0px;padding-top:0px">
-
-																																				<img src="http://i.imgur.com/GKDfNy1.png"
-																																					width="110" height="96" alt="Cup Center"
-																																					style="clear:both;display:block;max-width:100%;outline:none;text-decoration:none;margin-top: 50px;"
-																																					class="CToWUd">
-
-																																			</td>
-																																		</tr>
-																																	</tbody>
-																																</table>
-																															</td>
-																														</tr>
-
-																													</tbody>
-
-																												</table>
-																											</td>
-																										</tr>
-																									</tbody>
-																								</table>
-																							</td>
-																						</tr>
-																					</tbody>
-																				</table>
-																			</td>
-																		</tr>
-																	</tbody>
-																</table>
-
-															</td>
-														</tr>
-													</tbody>
-												</table>
-											</td>
-										</tr>
-
-									</tbody>
-								</table>
-
-								<table width="100%" border="0" cellpadding="0" cellspacing="0"
-									style="border:none;border-collapse:collapse;border-spacing:0;width:100%">
-									<tbody>
-										<tr>
-											<td align="center" style="direction:ltr;text-align:center;padding:0 14px 0 14px">
-												<table border="0" cellpadding="0" cellspacing="0"
-													style="border:none;border-collapse:collapse;border-spacing:0;width:100%">
-													<tbody>
-														<tr>
-															<td style="direction:ltr;text-align:center">
-
-																<table border="0" cellpadding="0" cellspacing="0" class="m_-5732199361944882318t1of12"
-																	align="center"
-																	style="border:none;border-collapse:collapse;border-spacing:0;max-width:56px;width:100%">
-																	<tbody>
-																		<tr>
-																			<td style="direction:ltr;text-align:center;padding-center:12px;padding-right:12px">
-																				<table border="0" cellpadding="0" cellspacing="0" width="100%" align="center"
-																					style="border:none;border-collapse:collapse;border-spacing:0;table-layout:fixed;width:100%">
-																					<tbody>
-																						<tr>
-																							<td height="2"
-																								style="direction:ltr;text-align:center;font-size:0;line-height:1px">&nbsp;
-
-																							</td>
-																						</tr>
-																					</tbody>
-																				</table>
-																			</td>
-																		</tr>
-																	</tbody>
-																</table>
-
-																<table border="0" cellpadding="0" cellspacing="0" class="m_-5732199361944882318t11of12"
-																	align="center"
-																	style="border:none;border-collapse:collapse;border-spacing:0;max-width:616px;width:100%">
-																	<tbody>
-																		<tr>
-																			<td style="direction:ltr;text-align:center;padding-center:0;padding-right:0">
-																				<table border="0" cellpadding="0" cellspacing="0" width="100%" align="center"
-																					style="border:none;border-collapse:collapse;border-spacing:0;table-layout:fixed;width:100%">
-																					<tbody>
-																						<tr>
-																							<td style="direction:ltr;text-align:left">
-																								<p
-																									style="color: #cecece;line-height: 200%;font-size: 17pt;font-family: 'Nunito Sans', 'Nunito', sans-serif;">
-																									Olá ${name}, seja bem-vindo(a) a plataforma Cup Center!<br />Antes
-																									de prosseguir, confirme o seu cadastro realizando a <span
-																										style="color: #709dff; font-family: 'Nunito Sans',  'Nunito', sans-serif;">verificação
-																										de email</span>,
-																									clicando no botão abaixo:</p>
-																								<p>
-																									<table align="center">
-																										<tr>
-																											<td></td>
-																										</tr>
-																										<tr>
-																											<td></td>
-																										</tr>
-																										<tr>
-																											<td></td>
-																										</tr>
-																										<tr>
-																											<td>
-																												<a style="margin-top: 2em; background-color: #709dff; border-bottom:6px solid #4861b6; padding: 20px; border-radius: 5px; outline: 0; text-decoration: none; color: #FFF; font-weight: 500; font-size: 17pt; font-family: 'Nunito', 'Nunito Sans', sans-serif;	 text-align: center; transition: background-color .5s;"
-																													href="http://localhost:${process.env.PORT}/verifyEmail/${id}">Verifique seu email</a>
-																											</td>
-																										</tr>
-																										<tr>
-																											<td></td>
-																										</tr>
-																										<tr>
-																											<td></td>
-																										</tr>
-																										<tr>
-																											<td></td>
-																										</tr>
-
-																									</table>
-																									<p
-																										style="color: #cecece;line-height: 200%;font-size: 17pt;font-family: 'Nunito Sans', 'Nunito', sans-serif;">
-																										Em caso de problemas, entre em contato com a equipe de suporte,
-																										através do seguinte email:<br>
-																										<a style="color:#709dff;font-family:'Nunito','Nunito Sans',sans-serif;text-decoration: none !important;" href="mailto:suporte.cupcenter@gmail.com" target="_blank">suporte.cupcenter@gmail.com</a>
-																									</p>
-																									<table align="center" style="width: 100%">
-																										<p
-																											style="color: #cecece;line-height: 200%;font-size: 17pt;font-family: 'Nunito Sans', 'Nunito', sans-serif;margin-top: 3em; text-align: center; font-size: 12pt; bottom: 0;">
-																											&copy; Cup Center 2019</p>
-																									</table>
-
-																							</td>
-																						</tr>
-																					</tbody>
-																				</table>
-
-																			</td>
-																		</tr>
-																	</tbody>
-																</table>
-
-															</td>
-														</tr>
-													</tbody>
-												</table>
-
-											</td>
-										</tr>
-									</tbody>
-								</table>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-
-			</td>
-		</tr>
-	</tbody>
-</table>
-
-</td>
-</tr>
-
-</tbody>
-</table>
+  <div style="background-color:white;">
+      </div>
+      <div style="margin:0px auto;max-width:520px;">
+        <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
+          <tbody>
+            <tr>
+              <td style="direction:ltr;font-size:0px;padding:12px 10% 4px 10%;text-align:center;">
+                <div class="mj-column-per-100 outlook-group-fix"
+                  style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                  <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;"
+                    width="100%">
+                    <tr>
+                      <td align="center" style="font-size:0px;padding:8px 0 0 0;word-break:break-word;">
+                        <div
+                          style="font-family:-apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;font-size:22px;font-weight:600;line-height:1.2;text-align:center;color:#000000;">
+                          Bem-vindo ao Despatchor!
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="margin:0px auto;max-width:520px;">
+        <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
+          <tbody>
+            <tr>
+              <td style="direction:ltr;font-size:0px;padding:20px 0;text-align:center;">
+                <div class="mj-column-per-100 outlook-group-fix"
+                  style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                  <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;"
+                    width="100%">
+                    <tr>
+                      <td align="center" style="font-size:0px;padding:16px 16px 0 16px;word-break:break-word;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation"
+                          style="border-collapse:collapse;border-spacing:0px;">
+                          <tbody>
+                            <tr>
+                              <td style="width:488px;"> <img alt="despatchor-banner" height="auto"
+                                  src="https://i.imgur.com/Clj46B5.jpg"
+                                  style="border:0;border-radius:12px;display:block;outline:none;text-decoration:none;height:auto;width:100%;font-size:13px;"
+                                  width="488" /> </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="margin:0px auto;max-width:520px;">
+        <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
+          <tbody>
+            <tr>
+              <td style="direction:ltr;font-size:0px;padding:12px 10% 0 10%;text-align:center;">
+                <div class="mj-column-per-100 outlook-group-fix"
+                  style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                  <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;"
+                    width="100%">
+                    <tr>
+                      <td align="center" style="font-size:0px;padding:8px 0 16px 0;word-break:break-word;">
+                        <div
+                          style="font-family:-apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;font-size:18px;font-weight:600;line-height:1.4;text-align:left;color:#8E8E92;">
+                          <span style="color: #000000;">Olá ${name}!</span>
+                          <br />
+                          Para começar a usar a plataforma, confirme seu e-mail apertando no botão abaixo!
+                        </div>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="center" vertical-align="middle" class="type-cta"
+                        style="font-size:0px;padding:8px 0;word-break:break-word;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation"
+                          style="border-collapse:separate;line-height:100%;">
+                          <tr>
+                            <td align="center" bgcolor="#000000" role="presentation"
+                              style="border:none;border-radius:6px;cursor:auto;mso-padding-alt:12px 12px;background:#000000;"
+                              valign="middle">
+                              <a href="http://localhost:3000/signup/email/${id}"
+                                style="display:inline-block;background:#000000;color:#ffffff;font-family:-apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;font-size:15px;font-weight:600;line-height:1;margin:0;text-decoration:none;text-transform:none;padding:12px 12px;mso-padding-alt:0px;border-radius:6px;"
+                                target="_blank">
+                                Confirmar Email
+                              </a>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="margin:0px auto;max-width:520px;">
+        <table align="center" border="0" cellpadding="0" cellspacing="0" role="presentation" style="width:100%;">
+          <tbody>
+            <tr>
+              <td style="direction:ltr;font-size:0px;padding:112px 16px 32px 16px;text-align:center;">
+                <div class="mj-column-per-100 outlook-group-fix"
+                  style="font-size:0px;text-align:left;direction:ltr;display:inline-block;vertical-align:top;width:100%;">
+                  <table border="0" cellpadding="0" cellspacing="0" role="presentation" style="vertical-align:top;"
+                    width="100%">
+                    <tr>
+                      <td align="center" style="font-size:0px;padding:10px 25px;word-break:break-word;">
+                      </td>
+                    </tr>
+                    <tr>
+                      <td align="center" vertical-align="middle"
+                        style="font-size:0px;padding:0;padding-top:4px;word-break:break-word;">
+                        <table border="0" cellpadding="0" cellspacing="0" role="presentation"
+                          style="border-collapse:separate;line-height:100%;">
+                          <tr>
+                            <td align="center" role="presentation"
+                              style="border:none;border-radius:3px;cursor:auto;mso-padding-alt:4px 0;background:none;display:inline-block;background:none;color:#8E8E92;font-family:-apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;font-size:11px;font-weight:500;line-height:1.4;margin:0;text-decoration:none;text-transform:none;padding:4px 0;mso-padding-alt:0px;border-radius:3px;"
+                              valign="middle">
+                              ©2020 Despatchor
+                              </a>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <br />
 `
 }
 
-export default Mail
+export default mail

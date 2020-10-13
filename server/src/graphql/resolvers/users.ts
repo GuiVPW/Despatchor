@@ -2,7 +2,7 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { storeUpload } from '../../utils/storeUpload'
 import { prisma } from '../../index'
-import sendEmail from '../../utils/sendEmail'
+import sendEmail from '../../config/emailTransporter'
 
 const resolvers = {
   Query: {
@@ -48,7 +48,7 @@ const resolvers = {
           }
         })
 
-        await sendEmail(user)
+        const emailSender = await sendEmail(user)
 
         const payload = {
           email: user.email,
@@ -74,10 +74,20 @@ const resolvers = {
           }
         })
 
-        if (!user) return new Error('Erro: email não encontrado!')
+        if (!user) return null
 
-        if (!(await bcrypt.compare(password, user.password)))
-          return new Error('Erro: senha incorreta!')
+        if (user && !user.verifiedEmail) {
+          const userEmail = {
+            id: user.id,
+            name: user.name,
+            email: user.email
+          }
+          const send = await sendEmail(userEmail)
+          if (!send) throw new Error('Email falhou')
+          return null
+        }
+
+        if (!(await bcrypt.compare(password, user.password))) return null
 
         const token = jwt.sign(
           {
@@ -106,9 +116,21 @@ const resolvers = {
       }
     },
 
-    verifyEmail: async (_, { id, code }) => {
+    verifyEmail: async (_, { id }) => {
       try {
-        const user = await prisma.user.findOne({})
+        const isUser = await prisma.user.findOne({ where: { id } })
+        if (!isUser || isUser.verifiedEmail) return null
+
+        const user = await prisma.user.update({
+          data: {
+            verifiedEmail: true
+          },
+          where: {
+            id
+          }
+        })
+
+        return user.verifiedEmail
       } catch (e) {
         return e
       }
