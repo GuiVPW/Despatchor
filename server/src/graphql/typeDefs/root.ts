@@ -6,6 +6,7 @@ export default gql`
   scalar JSON
 
   directive @auth on FIELD_DEFINITION
+
   directive @postOwner(creator: Boolean = false) on FIELD_DEFINITION
 
   type Query {

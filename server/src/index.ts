@@ -8,6 +8,7 @@ import { pubsub } from './constants/subscriptions'
 import { ApolloServer } from 'apollo-server-express'
 import typeDefs from './graphql/typeDefs'
 import dotenv from 'dotenv'
+import AuthDirective from './directives/auth'
 
 dotenv.config()
 
@@ -25,9 +26,11 @@ const server = new ApolloServer({
   context: ({ req, res }) => ({
     req,
     res,
-    pubsub,
-    prisma
+    pubsub
   }),
+  schemaDirectives: {
+    auth: AuthDirective
+  },
   ...APOLLO_OPTIONS
 })
 
