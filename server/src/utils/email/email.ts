@@ -82,7 +82,7 @@ export const mail = ({ id, name }: User): string => {
                           style="font-family:-apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;font-size:18px;font-weight:600;line-height:1.4;text-align:left;color:#8E8E92;">
                           <span style="color: #000000;">Olá ${name}!</span>
                           <br />
-                          Para começar a usar a plataforma, confirme seu e-mail apertando no botão abaixo!
+                          Para começar a usar a plataforma, confirme seu e-mail clicando no botão abaixo!
                         </div>
                       </td>
                     </tr>

@@ -1,7 +1,8 @@
 import { createTransport } from 'nodemailer'
-import { google } from 'googleapis'
-import mail from '../utils/email/email'
 import dotenv from 'dotenv'
+
+import oauth2Client from './google-api'
+import mail from '../utils/email/email'
 
 dotenv.config()
 
@@ -10,15 +11,6 @@ interface EmailSender {
   name: string
   email: string
 }
-
-const oauth2Client = new google.auth.OAuth2(
-  process.env.OAUTH2_CLIENTID,
-  process.env.OAUTH2_SECRET
-)
-
-oauth2Client.setCredentials({
-  refresh_token: process.env.OAUTH2_REFRESHTOKEN
-})
 
 const sendEmail = async ({
   email,
