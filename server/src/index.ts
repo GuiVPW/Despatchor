@@ -7,10 +7,10 @@ import { APOLLO_OPTIONS, HTTP_PORT } from './config/apollo'
 import { pubsub } from './constants/subscriptions'
 import { ApolloServer } from 'apollo-server-express'
 import typeDefs from './graphql/typeDefs'
-import dotenv from 'dotenv'
-import AuthDirective from './directives/auth'
+import { config } from 'dotenv-safe'
+import schemaDirectives from './graphql/directives'
 
-dotenv.config()
+config()
 
 export const app = express()
 
@@ -28,9 +28,7 @@ const server = new ApolloServer({
     res,
     pubsub
   }),
-  schemaDirectives: {
-    auth: AuthDirective
-  },
+  schemaDirectives,
   ...APOLLO_OPTIONS
 })
 

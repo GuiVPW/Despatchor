@@ -7,15 +7,15 @@ export default gql`
   }
 
   extend type Mutation {
-    createPost(creationInput: PostCreation!): Post @auth
+    createPost(creationInput: PostCreation!): Post
 
-    editPost(editionInput: PostEdition): Post @auth @postOwner(creator: true)
+    editPost(editionInput: PostEdition): Post @auth @postOwner
 
     addLike(id: Int!, postId: Int!): Int @auth
 
     removeLike(id: Int!): Int @auth
 
-    removePost(id: Int!): Boolean @auth @postOwner(creator: true)
+    removePost(id: Int!): Boolean @auth @postOwner
   }
 
   extend type Subscription {
@@ -28,7 +28,7 @@ export default gql`
     id: Int!
     title: String!
     description: String!
-    imageUrl: Upload!
+    imageUrl: Upload
   }
 
   input PostEdition {
