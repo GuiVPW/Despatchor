@@ -3,12 +3,13 @@ import { PrismaClient } from '@prisma/client'
 import resolvers from './src/graphql/resolvers'
 import path from 'path'
 import { createServer } from 'http'
-import { APOLLO_OPTIONS, HTTP_PORT } from './src/config/apollo'
+import { HTTP_PORT } from './src/config/apollo'
 import { pubsub } from './src/constants/subscriptions'
 import { ApolloServer } from 'apollo-server-express'
 import typeDefs from './src/graphql/typeDefs'
 import dotenv from 'dotenv-safe'
 import schemaDirectives from './src/graphql/directives'
+import cors from 'cors'
 
 dotenv.config()
 
@@ -19,6 +20,8 @@ export const prisma = new PrismaClient()
 app.use((_req, _res, next) => {
   next()
 })
+
+app.use(cors())
 
 const server = new ApolloServer({
   typeDefs,
