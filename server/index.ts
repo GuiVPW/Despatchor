@@ -1,16 +1,16 @@
 import express from 'express'
 import { PrismaClient } from '@prisma/client'
-import resolvers from './graphql/resolvers'
+import resolvers from './src/graphql/resolvers'
 import path from 'path'
 import { createServer } from 'http'
-import { APOLLO_OPTIONS, HTTP_PORT } from './config/apollo'
-import { pubsub } from './constants/subscriptions'
+import { APOLLO_OPTIONS, HTTP_PORT } from './src/config/apollo'
+import { pubsub } from './src/constants/subscriptions'
 import { ApolloServer } from 'apollo-server-express'
-import typeDefs from './graphql/typeDefs'
-import { config } from 'dotenv-safe'
-import schemaDirectives from './graphql/directives'
+import typeDefs from './src/graphql/typeDefs'
+import dotenv from 'dotenv-safe'
+import schemaDirectives from './src/graphql/directives'
 
-config()
+dotenv.config()
 
 export const app = express()
 

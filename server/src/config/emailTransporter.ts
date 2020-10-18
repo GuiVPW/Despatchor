@@ -1,10 +1,10 @@
 import { createTransport } from 'nodemailer'
-import dotenv from 'dotenv'
+import { config } from 'dotenv'
 
 import oauth2Client from './google-api'
 import mail from '../utils/email/email'
 
-dotenv.config()
+config()
 
 interface EmailSender {
   id: number
