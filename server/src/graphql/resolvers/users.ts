@@ -1,8 +1,13 @@
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { storeUpload } from '../../utils/storeUpload'
-import { prisma } from '../../index'
+import { prisma } from '../../../index'
 import sendEmail from '../../config/emailTransporter'
+import {
+  AuthenticationError,
+  ForbiddenError,
+  ValidationError
+} from 'apollo-server-express'
 
 const resolvers = {
   Query: {
@@ -17,14 +22,14 @@ const resolvers = {
   },
   Mutation: {
     createUser: async (_, { signupInput }) => {
-      const { email, password, name, username, bio, avatarUrl } = signupInput
+      const { email, password, name, bio, avatarUrl } = signupInput
       try {
         if (
           await prisma.user.findOne({
             where: { email }
           })
         ) {
-          throw new Error('Erro: email já utilizado.')
+          throw new ValidationError('Erro: email já utilizado.')
         }
 
         if (avatarUrl) {
@@ -37,22 +42,21 @@ const resolvers = {
             folder: 'users'
           })
         }
+
         const user = await prisma.user.create({
           data: {
             email,
             password: bcrypt.hashSync(password, 10),
-            username,
             avatarUrl: path,
             name,
             bio
           }
         })
 
-        const emailSender = await sendEmail(user)
+        await sendEmail(user)
 
         const payload = {
           email: user.email,
-          username: user.username,
           avatarUrl: user.avatarUrl,
           name: user.name,
           bio: user.bio
@@ -61,12 +65,11 @@ const resolvers = {
         return payload
       } catch (e) {
         console.log(e)
-        return e
+        throw new ValidationError('Não foi possível criar um usuário')
       }
     },
 
-    login: async (_, { loginInput }) => {
-      const { email, password } = loginInput
+    login: async (_, { loginInput: { email, password } }) => {
       try {
         const user = await prisma.user.findOne({
           where: {
@@ -74,7 +77,7 @@ const resolvers = {
           }
         })
 
-        if (!user) return null
+        if (!user) throw new AuthenticationError('Usuário não existe')
 
         if (user && !user.verifiedEmail) {
           const userEmail = {
@@ -83,36 +86,34 @@ const resolvers = {
             email: user.email
           }
           const send = await sendEmail(userEmail)
-          if (!send) throw new Error('Email falhou')
-          return null
+          if (!send) throw new AuthenticationError('Email não existe')
         }
 
-        if (!(await bcrypt.compare(password, user.password))) return null
+        if (!(await bcrypt.compare(password, user.password)))
+          throw new AuthenticationError('Senha inocrreta')
 
         const token = jwt.sign(
           {
             id: user.id,
             email: user.email,
-            username: user.username,
             image: user.avatarUrl
           },
           process.env.SECRET,
           {
-            expiresIn: '86400'
+            expiresIn: '7d'
           }
         )
 
         const jwtToken = {
           id: user.id,
           email: user.email,
-          username: user.username,
           image: user.avatarUrl,
           token
         }
 
-        return jwtToken
+        return { jwtToken, email: user.verifiedEmail }
       } catch (e) {
-        return e
+        throw new ValidationError('Não foi possível completar o Login')
       }
     },
 
@@ -132,7 +133,8 @@ const resolvers = {
 
         return user.verifiedEmail
       } catch (e) {
-        return e
+        console.log(e)
+        throw new ForbiddenError('Não foi possível confirmar o email')
       }
     },
 
@@ -147,10 +149,12 @@ const resolvers = {
         const userDelete = await prisma.user.delete({
           where: { id }
         })
-        if (!user) throw new Error('Não foi possível excluir o usuário!')
+        if (!user)
+          throw new ValidationError('Não foi possível excluir o usuário!')
         return 'Usuário deletado com sucesso!'
       } catch (e) {
-        throw new Error(e)
+        console.log(e)
+        throw new ForbiddenError('Não foi possível deletar o usuário')
       }
     }
   }

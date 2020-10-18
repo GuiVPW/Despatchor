@@ -18,7 +18,7 @@ class AuthDirective extends SchemaDirectiveVisitor {
         const verify = jwt.verify(token, process.env.SECRET)
         if (!verify) throw new AuthenticationError('Você deve estar logado')
         return resolve.apply(this, args)
-      }
+      } else throw new AuthenticationError('Nenhum token enviado')
     }
   }
 }

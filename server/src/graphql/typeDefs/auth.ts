@@ -5,6 +5,7 @@ export default gql`
     id: ID!
     email: String
     token: String
+    email: Boolean
   }
 
   type Token {
