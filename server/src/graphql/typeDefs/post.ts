@@ -55,11 +55,4 @@ export default gql`
     user: User!
     createdAt: DateTime!
   }
-
-  type Comment {
-    id: ID!
-    author: User!
-    comment: String
-    createdAt: DateTime!
-  }
 `

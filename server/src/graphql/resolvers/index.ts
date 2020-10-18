@@ -2,6 +2,7 @@ import { DateTimeResolver as DateTime } from 'graphql-scalars'
 
 import users from './users'
 import posts from './posts'
+import comments from './comments'
 
 const resolvers = {
   ...users,
@@ -12,10 +13,12 @@ const resolvers = {
   },
   Mutation: {
     ...users.Mutation,
-    ...posts.Mutation
+    ...posts.Mutation,
+    ...comments.Mutation
   },
   Subscription: {
-    ...posts.Subscription
+    ...posts.Subscription,
+    ...comments.Subscription
   },
   DateTime
 }
