@@ -2,16 +2,13 @@ import { DateTimeResolver as DateTime } from 'graphql-scalars'
 
 import users from './users'
 import posts from './posts'
-import auth from './auth'
 
 const resolvers = {
   ...users,
   ...posts,
-  ...auth,
   Query: {
     ...users.Query,
-    ...posts.Query,
-    ...auth.Query
+    ...posts.Query
   },
   Mutation: {
     ...users.Mutation,

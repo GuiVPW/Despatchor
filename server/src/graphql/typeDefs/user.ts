@@ -21,14 +21,12 @@ export default gql`
     email: String!
     password: String!
     name: String!
-    username: String!
     bio: String
     avatarUrl: Upload
   }
 
   type SignUpPayload {
     email: String!
-    username: String
     avatarUrl: String
     name: String
     bio: String
@@ -42,7 +40,6 @@ export default gql`
   type User {
     id: ID!
     email: String!
-    username: String!
     name: String
     avatarUrl: String
     bio: String

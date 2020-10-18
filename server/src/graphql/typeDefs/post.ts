@@ -7,7 +7,7 @@ export default gql`
   }
 
   extend type Mutation {
-    createPost(creationInput: PostCreation!): Post
+    createPost(creationInput: PostCreation!): Post @auth
 
     editPost(editionInput: PostEdition): Post @auth @postOwner
 
@@ -19,9 +19,9 @@ export default gql`
   }
 
   extend type Subscription {
-    postCreated: Post @auth
-    postLikes: Post @auth
-    postRemoved: Post @auth
+    postCreated: Post
+    postLikes: Post
+    postRemoved: Post
   }
 
   input PostCreation {
