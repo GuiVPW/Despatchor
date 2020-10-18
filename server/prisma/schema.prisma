@@ -26,7 +26,7 @@ model Post {
   title        String
   description  String?
   published    Boolean     @default(false)
-  authorId     Int
+  authorId     Int         @unique
   author       User        @relation(fields: [authorId], references: [id])
   postImageUrl String?
   comment      Comment[]
@@ -46,7 +46,7 @@ model PostsLike {
 model Comment {
   id        Int      @id @default(autoincrement())
   author    User     @relation(fields: [authorId], references: [id])
-  authorId  Int
+  authorId  Int      @unique
   post      Post     @relation(fields: [postId], references: [id])
   postId    Int
   comment   String

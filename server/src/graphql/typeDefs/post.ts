@@ -7,9 +7,9 @@ export default gql`
   }
 
   extend type Mutation {
-    createPost(creationInput: PostCreation!): Post @auth
+    createPost(creationInput: PostCreation!): Post @auth @accountOwner
 
-    editPost(editionInput: PostEdition): Post @auth @postOwner
+    editPost(editionInput: PostEdition!): Post @auth @postOwner
 
     addLike(id: Int!, postId: Int!): Int @auth
 
@@ -23,7 +23,7 @@ export default gql`
   }
 
   input PostCreation {
-    id: Int!
+    authorId: Int!
     title: String!
     description: String!
     imageUrl: Upload

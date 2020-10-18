@@ -23,12 +23,14 @@ class CommentOrPostOwnerDirective extends SchemaDirectiveVisitor {
       if (!isCommentOwner)
         var isPostOwner = await prisma.post.findOne({
           where: {
-            id: postId,
+            id: postId
+          },
+          select: {
             authorId
           }
         })
 
-      if (!isCommentOwner || !isPostOwner)
+      if (!isCommentOwner || !isPostOwner || isPostOwner.authorId !== authorId)
         throw new ForbiddenError(
           'Apenas o dono do comentário ou do post pode fazer essa ação'
         )

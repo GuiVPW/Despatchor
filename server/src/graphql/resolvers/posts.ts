@@ -45,10 +45,10 @@ const resolvers = {
   Mutation: {
     createPost: async (
       _,
-      { creationInput: { id, title, description, imageUrl } }
+      { creationInput: { authorId, title, description, imageUrl } }
     ) => {
       try {
-        const user = await prisma.user.findOne({ where: { id } })
+        const user = await prisma.user.findOne({ where: { id: authorId } })
         if (!user) throw new Error('Usuário não encontrado!')
 
         if (imageUrl) {
@@ -65,7 +65,7 @@ const resolvers = {
           data: {
             author: {
               connect: {
-                id
+                id: authorId
               }
             },
             title,
@@ -80,8 +80,6 @@ const resolvers = {
         })
 
         pubsub.publish(POST_CREATED, { postCreated: post })
-
-        console.log(post)
 
         return post
       } catch (e) {
@@ -164,6 +162,7 @@ const resolvers = {
 
         return true
       } catch (e) {
+        console.log(e)
         throw new ForbiddenError('Falha na remoção')
       }
     },
