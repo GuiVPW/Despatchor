@@ -13,8 +13,6 @@ export default gql`
 
     addLike(id: Int!, postId: Int!): Int @auth
 
-    removeLike(id: Int!): Int @auth
-
     removePost(id: Int!): Boolean @auth @postOwner
   }
 
@@ -42,10 +40,11 @@ export default gql`
     title: String!
     description: String
     published: Boolean!
-    imageUrl: String!
-    author: User!
-    comments: [Comment]
+    authorId: Int
+    postImageUrl: String
     likes: Int!
+    author: User!
+    comment: [Comment]
     likers: [PostsLike]
     createdAt: DateTime!
   }
@@ -54,6 +53,7 @@ export default gql`
     id: ID!
     post: Post!
     user: User!
+    createdAt: DateTime!
   }
 
   type Comment {

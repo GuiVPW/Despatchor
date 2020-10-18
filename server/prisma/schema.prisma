@@ -39,16 +39,16 @@ model PostsLike {
   id     Int  @id @default(autoincrement())
   postId Int
   post   Post @relation(fields: [postId], references: [id])
-  userId Int
+  userId Int  @unique
   user   User @relation(fields: [userId], references: [id])
 }
 
 model Comment {
   id        Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
   author    User     @relation(fields: [authorId], references: [id])
   authorId  Int
   post      Post     @relation(fields: [postId], references: [id])
   postId    Int
   comment   String
+  createdAt DateTime @default(now())
 }

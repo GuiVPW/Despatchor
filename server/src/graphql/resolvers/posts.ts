@@ -1,5 +1,5 @@
 import { storeUpload } from '../../utils/storeUpload'
-import { prisma } from '../../index'
+import { prisma } from '../../../index'
 import {
   POST_CREATED,
   POST_LIKES,
@@ -7,6 +7,7 @@ import {
   POST_EDITED,
   pubsub
 } from '../../constants/subscriptions'
+import { ForbiddenError, ValidationError } from 'apollo-server-express'
 
 const resolvers = {
   Query: {
@@ -15,10 +16,17 @@ const resolvers = {
       return post
     },
 
-    posts: async (_, args) => prisma.post.findMany()
+    posts: async () =>
+      prisma.post.findMany({
+        where: { published: true },
+        orderBy: { createdAt: 'desc' }
+      })
   },
   Mutation: {
-    createPost: async (_, { id, title, description, imageUrl }) => {
+    createPost: async (
+      _,
+      { creationInput: { id, title, description, imageUrl } }
+    ) => {
       try {
         const user = await prisma.user.findOne({ where: { id } })
         if (!user) throw new Error('Usuário não encontrado!')
@@ -59,7 +67,10 @@ const resolvers = {
       }
     },
 
-    editPost: async (_, { id, title, description, imageUrl }) => {
+    editPost: async (
+      _,
+      { editionInput: { id, title, description, imageUrl } }
+    ) => {
       try {
         const post = await prisma.post.findOne({
           where: {
@@ -67,7 +78,7 @@ const resolvers = {
           }
         })
 
-        if (!post) throw new Error('Esse post não existe!')
+        if (!post) throw new ValidationError('Esse post não existe!')
 
         if (imageUrl) {
           const { createReadStream, filename } = await imageUrl
@@ -93,7 +104,7 @@ const resolvers = {
 
         return postUpdated
       } catch (e) {
-        throw new Error('Falha na remoção')
+        throw new ForbiddenError('Falha na remoção')
       }
     },
 
@@ -112,7 +123,7 @@ const resolvers = {
 
         return 'Removido com sucesso'
       } catch (e) {
-        throw new Error('Falha na remoção')
+        throw new ForbiddenError('Falha na remoção')
       }
     },
 
@@ -124,7 +135,7 @@ const resolvers = {
           }
         })
 
-        if (!post) return null
+        if (!post) throw new ForbiddenError('Post não encontrado')
 
         const postLiked = await prisma.postsLike.findMany({
           where: {
@@ -132,8 +143,33 @@ const resolvers = {
             userId: id
           }
         })
+        if (postLiked.length !== 0) {
+          const removeLike = await prisma.post.update({
+            data: {
+              likes: post.likes - 1,
+              likers: {
+                delete: {
+                  userId: id
+                }
+              }
+            },
+            where: {
+              id: postId
+            },
+            include: {
+              author: true,
+              comment: true,
+              likers: {
+                include: {
+                  user: true
+                }
+              }
+            }
+          })
 
-        if (postLiked.length > 0) return null
+          await pubsub.publish(POST_LIKES, { postLikes: removeLike })
+          return post.likes
+        }
 
         const addLike = await prisma.post.update({
           data: {
@@ -150,53 +186,22 @@ const resolvers = {
           },
           where: {
             id: postId
-          }
-        })
-
-        await pubsub.publish(POST_LIKES, { addLike })
-        return post.likes
-      } catch (e) {
-        throw new Error('Houve um problema, tente novamente')
-      }
-    },
-
-    removeLike: async (_, { id, postId }) => {
-      try {
-        const post = await prisma.post.findOne({
-          where: {
-            id: postId
-          }
-        })
-
-        if (!post) return null
-
-        const postLiked = await prisma.postsLike.findMany({
-          where: {
-            postId,
-            userId: id
-          }
-        })
-
-        if (postLiked.length === 0) return null
-
-        const removeLike = await prisma.post.update({
-          data: {
-            likes: post.likes - 1,
+          },
+          include: {
+            author: true,
+            comment: true,
             likers: {
-              delete: {
-                id
+              include: {
+                user: true
               }
             }
-          },
-          where: {
-            id: postId
           }
         })
 
-        await pubsub.publish(POST_REMOVED, { removeLike })
+        await pubsub.publish(POST_LIKES, { postLikes: addLike })
         return post.likes
       } catch (e) {
-        throw new Error('Houve um problema, tente novamente')
+        throw new ForbiddenError('Não foi possível completar a operação')
       }
     }
   },
