@@ -8,13 +8,10 @@ export default gql`
 
   extend type Mutation {
     createUser(signupInput: SignUp!): SignUpPayload
-    login(loginInput: Login): Auth
+    login(loginInput: Login!): Auth
     verifyEmail(id: Int!): Boolean
     deleteUser(id: Int!): String @auth
-  }
-
-  extend type Subscription {
-    emailVerified(id: Int!): Boolean
+    googleLogin(tokenId: String!): Auth
   }
 
   input SignUp {
