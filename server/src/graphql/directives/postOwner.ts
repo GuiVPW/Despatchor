@@ -1,7 +1,7 @@
 import { ForbiddenError, SchemaDirectiveVisitor } from 'apollo-server-express'
 import { defaultFieldResolver } from 'graphql'
 import jwt from 'jsonwebtoken'
-import { prisma } from '../..'
+import { prisma } from '../../..'
 
 const getAuthorId = req => {
   const Authorization = req.get('Authorization')
