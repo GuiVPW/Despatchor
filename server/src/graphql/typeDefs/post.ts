@@ -13,13 +13,13 @@ export default gql`
 
     addLike(id: Int!, postId: Int!): Int @auth
 
-    removePost(id: Int!): Boolean @auth @postOwner
+    removePost(postId: Int!): Boolean @auth @postOwner
   }
 
   extend type Subscription {
     postCreated: Post
     postLikes: Post
-    postRemoved: Post
+    postRemoved: Int
   }
 
   input PostCreation {

@@ -12,14 +12,34 @@ import { ForbiddenError, ValidationError } from 'apollo-server-express'
 const resolvers = {
   Query: {
     post: async (_, { id }) => {
-      const post = await prisma.post.findOne({ where: { id } })
+      const post = await prisma.post.findOne({
+        where: { id },
+        include: {
+          author: true,
+          comment: true,
+          likers: true
+        }
+      })
       return post
     },
 
     posts: async () =>
       prisma.post.findMany({
         where: { published: true },
-        orderBy: { createdAt: 'desc' }
+        orderBy: { createdAt: 'desc' },
+        include: {
+          author: true,
+          comment: {
+            include: {
+              author: true
+            }
+          },
+          likers: {
+            include: {
+              user: true
+            }
+          }
+        }
       })
   },
   Mutation: {
@@ -53,6 +73,9 @@ const resolvers = {
             postImageUrl: path,
             published: true,
             createdAt: new Date()
+          },
+          include: {
+            author: true
           }
         })
 
@@ -108,20 +131,38 @@ const resolvers = {
       }
     },
 
-    removePost: async (_, { id }) => {
+    removePost: async (_, { postId }) => {
       try {
-        const postId = await prisma.post.findOne({
+        const postFind = await prisma.post.findOne({
           where: {
-            id
+            id: postId
           }
         })
 
-        if (!postId) throw new Error('Post não existe!')
-        const post = await prisma.post.delete({ where: { id } })
+        if (!postFind) throw new ValidationError('Post não existe!')
 
-        pubsub.publish(POST_REMOVED, { postRemoved: post })
+        const likersDelete = await prisma.postsLike.deleteMany({
+          where: {
+            postId
+          }
+        })
 
-        return 'Removido com sucesso'
+        const commentsDelete = await prisma.comment.deleteMany({
+          where: {
+            postId
+          }
+        })
+
+        if (!likersDelete && !commentsDelete)
+          throw new ForbiddenError('Não foi possível excluir o post')
+
+        const postDelete = await prisma.post.delete({
+          where: { id: postId }
+        })
+
+        await pubsub.publish(POST_REMOVED, postDelete.id)
+
+        return true
       } catch (e) {
         throw new ForbiddenError('Falha na remoção')
       }
