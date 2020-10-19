@@ -31,8 +31,7 @@ const server = new ApolloServer({
     res,
     pubsub
   }),
-  schemaDirectives,
-  ...APOLLO_OPTIONS
+  schemaDirectives
 })
 
 app.use('/img', express.static(path.resolve(__dirname, '..', 'uploads')))
