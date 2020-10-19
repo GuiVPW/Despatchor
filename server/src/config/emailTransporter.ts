@@ -1,21 +1,19 @@
 import { createTransport } from 'nodemailer'
 import { config } from 'dotenv'
-
+import jwt from 'jsonwebtoken'
 import oauth2Client from './google-api'
-import mail from '../utils/email/email'
+
+import confirmationEmail from '../utils/emails/emailConfirmation'
+import resetPasswordEmail from '../utils/emails/emailReset'
+import { EmailSender } from '../types/email'
 
 config()
-
-interface EmailSender {
-  id: number
-  name: string
-  email: string
-}
 
 const sendEmail = async ({
   email,
   id,
-  name
+  name,
+  reason
 }: EmailSender): Promise<boolean | void> => {
   const { token: accessToken } = await oauth2Client.getAccessToken()
 
@@ -33,20 +31,48 @@ const sendEmail = async ({
     }
   })
 
-  smtpTransport.sendMail(
-    {
-      from: '"Despatchor"',
-      to: email,
-      subject: `Olá ${name}! Confirme sua conta.`,
-      html: mail({ id, name })
-    },
-    err => {
-      if (err) {
-        console.log(err)
-        return false
-      }
-    }
+  const token = jwt.sign(
+    { id },
+    reason === 'Confirmation' ? process.env.SECRET : process.env.RESET_SECRET
   )
+
+  if (reason === 'Confirmation') {
+    smtpTransport.sendMail(
+      {
+        from: '"Despatchor"',
+        to: email,
+        subject: `Olá ${name}! Confirme sua conta.`,
+        html: confirmationEmail({ token, name })
+      },
+      (err, info) => {
+        if (err) {
+          console.log(err)
+          return false
+        } else {
+          console.log(info)
+          return true
+        }
+      }
+    )
+  } else if (reason === 'PasswordReset') {
+    smtpTransport.sendMail(
+      {
+        from: '"Despatchor"',
+        to: email,
+        subject: `Olá ${name}! Altere sua senha.`,
+        html: resetPasswordEmail({ token, name })
+      },
+      (err, info) => {
+        if (err) {
+          console.log(err)
+          return false
+        } else {
+          console.log(info)
+          return true
+        }
+      }
+    )
+  }
 }
 
 export default sendEmail

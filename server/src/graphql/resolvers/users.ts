@@ -10,6 +10,7 @@ import {
 } from 'apollo-server-express'
 import oauth2Client from '../../config/google-api'
 import { config } from 'dotenv-safe'
+import { EmailVerify, VerifyId } from '../../types/email'
 
 config()
 
@@ -25,8 +26,10 @@ const resolvers = {
     users: async (_, {}) => prisma.user.findMany()
   },
   Mutation: {
-    createUser: async (_, { signupInput }) => {
-      const { email, password, name, bio, avatarUrl } = signupInput
+    createUser: async (
+      _,
+      { signupInput: { email, password, name, bio, avatarUrl } }
+    ) => {
       try {
         if (
           await prisma.user.findOne({
@@ -57,7 +60,7 @@ const resolvers = {
           }
         })
 
-        await sendEmail(user)
+        await sendEmail({ ...user, reason: 'Confirmation' })
 
         const payload = {
           email: user.email,
@@ -89,12 +92,12 @@ const resolvers = {
             name: user.name,
             email: user.email
           }
-          const send = await sendEmail(userEmail)
+          const send = await sendEmail({ ...userEmail, reason: 'Confirmation' })
           if (!send) throw new AuthenticationError('Email não existe')
         }
 
         if (!(await bcrypt.compare(password, user.password)))
-          throw new AuthenticationError('Senha inocrreta')
+          throw new AuthenticationError('Senha incorreta')
 
         const token = jwt.sign(
           {
@@ -132,7 +135,6 @@ const resolvers = {
         if (!login) throw new AuthenticationError('Login falhou')
 
         const { email_verified, email, picture, name } = login.getPayload()
-        console.log(login.getPayload())
 
         if (email_verified) {
           const user = await prisma.user.findOne({
@@ -147,7 +149,10 @@ const resolvers = {
               name: user.name,
               email: user.email
             }
-            const send = await sendEmail(userEmail)
+            const send = await sendEmail({
+              ...userEmail,
+              reason: 'Confirmation'
+            })
             if (!send) throw new AuthenticationError('Email não existe')
           }
 
@@ -188,7 +193,7 @@ const resolvers = {
           if (!newUser)
             throw new ValidationError('Não foi possível criar um novo usuário')
 
-          await sendEmail(newUser)
+          await sendEmail({ ...newUser, reason: 'Confirmation' })
 
           const payload = {
             email: newUser.email,
@@ -205,24 +210,98 @@ const resolvers = {
       }
     },
 
-    verifyEmail: async (_, { id }) => {
+    verifyEmail: async (_, { verifyInput: { token, reason } }: EmailVerify) => {
       try {
+        const tokenId = jwt.verify(
+          token,
+          reason === 'Confirmation'
+            ? process.env.SECRET
+            : process.env.RESET_SECRET
+        )
+
+        const id = (<VerifyId>tokenId).id
+
+        if (!id)
+          throw new ValidationError(
+            'O tempo expirou ou esse token não é válido'
+          )
+
         const isUser = await prisma.user.findOne({ where: { id } })
-        if (!isUser || isUser.verifiedEmail) return null
 
-        const user = await prisma.user.update({
-          data: {
-            verifiedEmail: true
-          },
-          where: {
-            id
-          }
-        })
+        if (isUser.verifiedEmail && reason === 'Confirmation')
+          throw new ValidationError('Você já confirmou seu email')
 
-        return user.verifiedEmail
+        if (reason === 'Confirmation' && !isUser.verifiedEmail) {
+          const user = await prisma.user.update({
+            data: {
+              verifiedEmail: true
+            },
+            where: {
+              id
+            }
+          })
+          return user.verifiedEmail
+        } else {
+          return true
+        }
       } catch (e) {
         console.log(e)
         throw new ForbiddenError('Não foi possível confirmar o email')
+      }
+    },
+
+    sendPasswordReset: async (_, { id }) => {
+      try {
+        const isUser = await prisma.user.findOne({
+          where: { id }
+        })
+
+        if (!isUser) throw new ForbiddenError('Esse usuário não existe')
+
+        await sendEmail({ ...isUser, reason: 'PasswordReset' })
+
+        return true
+      } catch (e) {
+        console.log(e)
+        throw new ValidationError('Não foi possível enviar o email de reset')
+      }
+    },
+
+    resetPassword: async (
+      _,
+      { resetInput: { id, oldPassword, newPassword } }
+    ) => {
+      try {
+        const isUser = await prisma.user.findOne({
+          where: { id }
+        })
+
+        if (!isUser) throw new ForbiddenError('Esse usuário não existe')
+
+        const bcryptedNewPassword = bcrypt.hashSync(newPassword, 10)
+
+        if (!(await bcrypt.compare(oldPassword, isUser.password)))
+          throw new AuthenticationError('Senha incorreta')
+
+        if (await bcrypt.compare(newPassword, isUser.password))
+          throw new ValidationError('Suas senhas não podem ser iguais!')
+
+        const updatePassword = await prisma.user.update({
+          where: {
+            id
+          },
+          data: {
+            password: bcryptedNewPassword
+          }
+        })
+
+        if (!updatePassword)
+          throw new ForbiddenError('Não foi possível alterar sua senha')
+
+        return true
+      } catch (e) {
+        console.log(e)
+        throw new ForbiddenError('Não foi possível alterar sua senha')
       }
     },
 

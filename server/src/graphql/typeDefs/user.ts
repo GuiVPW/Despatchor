@@ -9,9 +9,16 @@ export default gql`
   extend type Mutation {
     createUser(signupInput: SignUp!): SignUpPayload
     login(loginInput: Login!): Auth
-    verifyEmail(id: Int!): Boolean
+    verifyEmail(verifyInput: Verify!): Boolean
     deleteUser(id: Int!): String @auth
     googleLogin(tokenId: String!): Auth
+    resetPassword(resetInput: resetPassword!): Boolean
+    sendPasswordReset(id: Int!): Boolean
+  }
+
+  input Verify {
+    token: String!
+    reason: EmailType!
   }
 
   input SignUp {
@@ -20,6 +27,17 @@ export default gql`
     name: String!
     bio: String
     avatarUrl: Upload
+  }
+
+  input resetPassword {
+    id: Int!
+    oldPassword: String!
+    newPassword: String!
+  }
+
+  enum EmailType {
+    Confirmation
+    PasswordReset
   }
 
   type SignUpPayload {

@@ -1,8 +1,11 @@
-interface User {
-  id: number
+interface UserVerification {
+  token: string
   name: string
 }
-export const mail = ({ id, name }: User): string => {
+export const resetPasswordEmail = ({
+  token,
+  name
+}: UserVerification): string => {
   return `
   <table width="100%" height="100%" align="center" border="0" cellpadding="0" cellspacing="0"
 	style="background-color:#FFF;border:0;border-collapse:collapse;border-spacing:0;vertical-align: center;"
@@ -25,7 +28,7 @@ export const mail = ({ id, name }: User): string => {
                       <td align="center" style="font-size:0px;padding:8px 0 0 0;word-break:break-word;">
                         <div
                           style="font-family:-apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;font-size:22px;font-weight:600;line-height:1.2;text-align:center;color:#000000;">
-                          Bem-vindo ao Despatchor!
+                          Olá ${name}, altere sua senha!
                         </div>
                       </td>
                     </tr>
@@ -80,9 +83,9 @@ export const mail = ({ id, name }: User): string => {
                       <td align="center" style="font-size:0px;padding:8px 0 16px 0;word-break:break-word;">
                         <div
                           style="font-family:-apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;font-size:18px;font-weight:600;line-height:1.4;text-align:left;color:#8E8E92;">
-                          <span style="color: #000000;">Olá ${name}!</span>
+                          Para poder alterar sua senha, clique no botão abaixo e você será redirecionado para a página de alteração.
                           <br />
-                          Para começar a usar a plataforma, confirme seu e-mail clicando no botão abaixo!
+                          Caso não foi você quem pediu essa mudança, pode ignorar esse e-mail.
                         </div>
                       </td>
                     </tr>
@@ -95,10 +98,10 @@ export const mail = ({ id, name }: User): string => {
                             <td align="center" bgcolor="#000000" role="presentation"
                               style="border:none;border-radius:6px;cursor:auto;mso-padding-alt:12px 12px;background:#000000;"
                               valign="middle">
-                              <a href="http://localhost:3000/signup/email/${id}"
+                              <a href="http://localhost:3000/reset/${token}"
                                 style="display:inline-block;background:#000000;color:#ffffff;font-family:-apple-system, BlinkMacSystemFont, Helvetica, Arial, sans-serif;font-size:15px;font-weight:600;line-height:1;margin:0;text-decoration:none;text-transform:none;padding:12px 12px;mso-padding-alt:0px;border-radius:6px;"
                                 target="_blank">
-                                Confirmar Email
+                                Alterar senha
                               </a>
                             </td>
                           </tr>
@@ -153,4 +156,4 @@ export const mail = ({ id, name }: User): string => {
 `
 }
 
-export default mail
+export default resetPasswordEmail
