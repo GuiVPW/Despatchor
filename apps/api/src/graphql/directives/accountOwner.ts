@@ -6,7 +6,7 @@ class AccountOwner extends SchemaDirectiveVisitor {
 	public visitFieldDefinition(field) {
 		const { resolve = defaultFieldResolver } = field
 		field.resolve = async (...args) => {
-			const [, { authorId }, { req }] = args
+			const [, {creationInput: {authorId}}, { req }] = args
 
 			const jwtAuthorId = getAuthorId(req)
 

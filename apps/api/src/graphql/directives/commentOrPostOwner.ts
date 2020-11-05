@@ -7,9 +7,9 @@ class CommentOrPostOwnerDirective extends SchemaDirectiveVisitor {
 	public visitFieldDefinition(field) {
 		const { resolve = defaultFieldResolver } = field
 		field.resolve = async (...args) => {
-			const [, { postId, commentId }, { req }] = args
+			const [, {deleteInput: {authorId, postId, commentId}}, { req }] = args
 
-			const authorId = getAuthorId(req)
+			const authorIdToken = getAuthorId(req)
 
 			const isCommentOwner = await prisma.comment.findOne({
 				where: {
@@ -31,7 +31,7 @@ class CommentOrPostOwnerDirective extends SchemaDirectiveVisitor {
 					}
 				})
 
-			if (!isCommentOwner || !isPostOwner || isPostOwner.authorId !== authorId)
+			if (!isCommentOwner || !isPostOwner || isPostOwner.authorId !== authorIdToken)
 				throw new ForbiddenError(
 					'Apenas o dono do comentário ou do post pode fazer essa ação'
 				)

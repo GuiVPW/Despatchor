@@ -7,7 +7,7 @@ class PostOwnerDirective extends SchemaDirectiveVisitor {
 	public visitFieldDefinition(field) {
 		const { resolve = defaultFieldResolver } = field
 		field.resolve = async (...args) => {
-			const [, { postId }, { req }] = args
+			const [, { input: { postId } }, { req }] = args
 
 			const authorId = getAuthorId(req)
 
@@ -19,7 +19,7 @@ class PostOwnerDirective extends SchemaDirectiveVisitor {
 					authorId: true
 				}
 			})
-
+      
 			if (!authorId || !exists || exists.authorId !== authorId)
 				throw new ForbiddenError('Apenas o dono do post pode fazer essa ação')
 
