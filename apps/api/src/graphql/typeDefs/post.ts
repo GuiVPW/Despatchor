@@ -2,18 +2,18 @@ import { gql } from 'apollo-server-express'
 
 export default gql`
 	extend type Query {
-		post(id: Int!): Post
+		post(id: String): Post
 		posts: [Post!]
 	}
 
 	extend type Mutation {
 		createPost(creationInput: PostCreation!): Post @auth @accountOwner
 
-		editPost(editionInput: PostEdition!): Post @auth @postOwner
+		editPost(input: PostEdition!): Post @auth @postOwner
 
-		addLike(id: Int!, postId: Int!): Int @auth
+		addLike(input: AddLike): Int @auth
 
-		removePost(postId: Int!): Boolean @auth @postOwner
+		removePost(input: PostRemove!): Boolean @auth @postOwner
 	}
 
 	extend type Subscription {
@@ -22,25 +22,34 @@ export default gql`
 		postRemoved: Int
 	}
 
+
 	input PostCreation {
-		authorId: Int!
+		authorId: String!
 		title: String!
 		description: String!
 		imageUrl: Upload
 	}
 
+  input PostRemove {
+    postId: String!
+  }
+
 	input PostEdition {
-		id: Int!
+		id: String
 		title: String
 		description: String
 	}
 
+  input AddLike {
+    id: String postId: String!
+  }
+
 	type Post {
-		id: ID!
+		id: String
 		title: String!
 		description: String
 		published: Boolean!
-		authorId: Int
+		authorId: String
 		postImageUrl: String
 		likes: Int!
 		author: User!
@@ -50,7 +59,7 @@ export default gql`
 	}
 
 	type PostsLike {
-		id: ID!
+		id: String
 		post: Post!
 		user: User!
 		createdAt: DateTime!

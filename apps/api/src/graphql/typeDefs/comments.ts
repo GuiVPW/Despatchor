@@ -12,18 +12,19 @@ export default gql`
 	}
 
 	input CommentCreation {
-		authorId: Int!
-		postId: Int!
+		authorId: String!
+		postId: String!
 		comment: String!
 	}
 
 	input CommentDeletion {
-		commentId: Int!
-		authorId: Int!
+		commentId: String!
+    postId: String!
+		authorId: String!
 	}
 
 	type Comment {
-		id: ID!
+		id: String
 		author: User!
 		comment: String
 		createdAt: DateTime!

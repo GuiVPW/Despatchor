@@ -2,7 +2,7 @@ import { gql } from 'apollo-server-express'
 
 export default gql`
 	extend type Query {
-		user(id: Int!): User! @auth
+		user(id: String): User! @auth
 		users: [User!]
 	}
 
@@ -10,10 +10,10 @@ export default gql`
 		createUser(signupInput: SignUp!): SignUpPayload
 		login(loginInput: Login!): Auth
 		verifyEmail(verifyInput: Verify!): Boolean
-		deleteUser(id: Int!): String @auth
+		deleteUser(id: String): String @auth
 		googleLogin(tokenId: String!): Auth
 		resetPassword(resetInput: resetPassword!): Boolean
-		sendPasswordReset(id: Int!): Boolean
+		sendPasswordReset(id: String): Boolean
 	}
 
 	input Verify {
@@ -30,7 +30,7 @@ export default gql`
 	}
 
 	input resetPassword {
-		id: Int!
+		id: String
 		oldPassword: String!
 		newPassword: String!
 	}
@@ -53,7 +53,7 @@ export default gql`
 	}
 
 	type User {
-		id: ID!
+		id: String
 		email: String!
 		name: String
 		avatarUrl: String
