@@ -14,7 +14,7 @@ const sendEmail = async ({
 	id,
 	name,
 	reason
-}: EmailSender): Promise<boolean | void> => {
+}: EmailSender): Promise<void> => {
 	const { token: accessToken } = await oauth2Client.getAccessToken()
 
 	const smtpTransport = createTransport({
@@ -44,16 +44,16 @@ const sendEmail = async ({
 				subject: `Olá ${name}! Confirme sua conta.`,
 				html: confirmationEmail({ token, name })
 			},
-			(err, info) => {
+			err => {
 				if (err) {
-					console.log(err)
+					console.log('err', err)
 					return false
 				} else {
-					console.log(info)
 					return true
 				}
 			}
 		)
+
 	} else if (reason === 'PasswordReset') {
 		smtpTransport.sendMail(
 			{
@@ -62,12 +62,11 @@ const sendEmail = async ({
 				subject: `Olá ${name}! Altere sua senha.`,
 				html: resetPasswordEmail({ token, name })
 			},
-			(err, info) => {
+			err => {
 				if (err) {
 					console.log(err)
 					return false
 				} else {
-					console.log(info)
 					return true
 				}
 			}
