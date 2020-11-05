@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:latest
+    restart: unless-stopped
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - '5434:5432'
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: admin
+      POSTGRES_DB: postgres
+
+  cache:
+    image: redislabs/rejson:latest
+    restart: unless-stopped
+    ports:
+      - '6385:6384'
+  redisinsight:
+    image: redislabs/redisinsight:latest
+    restart: unless-stopped
+    ports:
+      - '8082:8081'
+    volumes:
+      - redisinsight-data:/db
+volumes:
+  postgres-data:
+  redisinsight-data:
