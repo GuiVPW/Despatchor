@@ -128,7 +128,7 @@ const resolvers = {
 			}
 		},
 
-		removePost: async (_, { postId }) => {
+		removePost: async (_, { input: { postId } }) => {
 			try {
 				const postFind = await prisma.post.findOne({
 					where: {
@@ -166,7 +166,7 @@ const resolvers = {
 			}
 		},
 
-		addLike: async (_, { id, postId }) => {
+		addLike: async (_, { input: { id, postId }}) => {
 			try {
 				const post = await prisma.post.findOne({
 					where: {
@@ -182,6 +182,7 @@ const resolvers = {
 						userId: id
 					}
 				})
+        
 				if (postLiked.length !== 0) {
 					const removeLike = await prisma.post.update({
 						data: {
@@ -207,7 +208,7 @@ const resolvers = {
 					})
 
 					await pubsub.publish(POST_LIKES, { postLikes: removeLike })
-					return post.likes
+					return post.likes - 1
 				}
 
 				const addLike = await prisma.post.update({
@@ -238,7 +239,7 @@ const resolvers = {
 				})
 
 				await pubsub.publish(POST_LIKES, { postLikes: addLike })
-				return post.likes
+				return post.likes + 1
 			} catch (e) {
 				throw new ForbiddenError('Não foi possível completar a operação')
 			}
