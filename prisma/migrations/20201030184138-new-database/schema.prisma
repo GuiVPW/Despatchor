@@ -1,0 +1,85 @@
+datasource db {
+  provider = "postgresql"
+  url = "***"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            String       @id @default(uuid())
+  email         String       @unique
+  password      String
+  name          String?      @unique
+  avatarUrl     String?
+  posts         Post[]
+  comment       Comment[]
+  bio           String?
+  liked         PostsLike[]
+  verifiedEmail Boolean      @default(false)
+  updatedAt     DateTime     @updatedAt
+  createdAt     DateTime     @default(now())
+  sentMessages  Message[]
+  chats         ChatOnUser[]
+}
+
+model Post {
+  id           String      @id @default(uuid())
+  title        String
+  description  String?
+  published    Boolean     @default(false)
+  authorId     String      @unique
+  author       User        @relation(fields: [authorId], references: [id])
+  postImageUrl String?
+  comment      Comment[]
+  likes        Int         @default(0)
+  likers       PostsLike[]
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+}
+
+model PostsLike {
+  id        String   @id @default(uuid())
+  postId    String
+  post      Post     @relation(fields: [postId], references: [id])
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String   @unique
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    String
+  comment   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Chat {
+  id       String       @id @default(uuid())
+  users    ChatOnUser[]
+  messages Message[]
+}
+
+model Message {
+  id          String   @id @default(uuid())
+  body        String
+  createdBy   User     @relation(fields: [createdById], references: [id])
+  createdById String
+  chat        Chat     @relation(fields: [chatId], references: [id])
+  chatId      String
+  createdAt   DateTime @default(now())
+}
+
+model ChatOnUser {
+  chat   Chat   @relation(fields: [chatId], references: [id])
+  chatId String
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  @@id([chatId, userId])
+}

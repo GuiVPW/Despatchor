@@ -1,0 +1,13 @@
+# Prisma Migrate lockfile v1
+
+20201012034216-principal-models
+20201012035345-removed-duplicated-posts
+20201012035457-fixed-post-bugs
+20201012052723-added-user-created-at
+20201017195416-removed-user-schema--unique-email-field
+20201017195544-added-email--unique-property
+20201018030622-removed-username
+20201018032952-added-unique-key-to-user-id-in-posts-like-schema
+20201018053744-added-post---comment-author-id-fields-as--unique
+20201030184138-new-database
+20201105041327-removed-chat-and-messages-from-models

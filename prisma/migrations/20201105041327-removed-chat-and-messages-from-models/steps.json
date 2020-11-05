@@ -1,0 +1,27 @@
+{
+  "version": "0.3.14-fixed",
+  "steps": [
+    {
+      "tag": "DeleteModel",
+      "model": "Chat"
+    },
+    {
+      "tag": "DeleteModel",
+      "model": "Message"
+    },
+    {
+      "tag": "DeleteModel",
+      "model": "ChatOnUser"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "User",
+      "field": "sentMessages"
+    },
+    {
+      "tag": "DeleteField",
+      "model": "User",
+      "field": "chats"
+    }
+  ]
+}
