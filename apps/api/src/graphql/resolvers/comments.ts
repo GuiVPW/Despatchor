@@ -7,7 +7,7 @@ const resolvers = {
 	Mutation: {
 		createComment: async (
 			_,
-			{ creationInput: { authorId, postId, comment } }
+			{ input: { authorId, postId, comment } }
 		): Promise<
 			Omit<Comment, ''> & {
 				author: User
@@ -46,7 +46,7 @@ const resolvers = {
 				throw new ForbiddenError('Erro ao tentar criar o comentário')
 			}
 		},
-		removeComment: async (_, { deleteInput: { commentId } }): Promise<boolean> => {
+		removeComment: async (_, { input: { commentId, authorId } }): Promise<boolean> => {
 			try {
 				const comment = await prisma.comment.findOne({
 					where: {
