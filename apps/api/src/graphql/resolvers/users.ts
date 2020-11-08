@@ -6,7 +6,7 @@ import sendEmail from '../../config/emailTransporter'
 import { AuthenticationError, ForbiddenError, ValidationError } from 'apollo-server-express'
 import oauth2Client from '../../config/google-api'
 import { config } from 'dotenv-safe'
-import { LoginPayload, JWTToken } from '../../types/jwt'
+import { LoginPayload, JWTToken, JWTTokenPayload } from '../../types/jwt'
 import { EmailVerify, VerifyId } from '../../types/email'
 import { Post, User } from '@prisma/client'
 
@@ -33,13 +33,15 @@ const resolvers = {
 			const Authorization = req.get('Authorization')
 			if (Authorization) {
 				const token = Authorization.replace('Bearer ', '')
+
 				const tokenObject = verify(token, process.env.SECRET)
 
 				if (!tokenObject) throw new AuthenticationError('Token não é válido')
 
 				if (typeof tokenObject === 'object') {
+					const {id}: Pick<JWTTokenPayload, 'id'> = tokenObject
 					const user = await prisma.user.findOne({
-						where: { id: token.id }
+						where: { id }
 					})
 
 					return user
