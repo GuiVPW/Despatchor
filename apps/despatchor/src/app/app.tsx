@@ -8,19 +8,23 @@ import { useQuery } from '@apollo/client'
 import { VERIFY_TOKEN } from './constants/queries'
 
 import { User } from '../types/User'
-import { LayoutDispatch } from '../store/reducers/layout/types'
+import { LayoutDispatch, LayoutState } from '../store/reducers/layout/types'
 import { AuthDispatch, AuthState } from '../store/reducers/auth/types'
 
 import { HOME } from './constants/routes'
-import PrivateRoute from './components/PrivateRoutes'
 import Home from './pages/Home'
 import Loading from './components/Loading'
 
+import { MuiThemeProvider, CssBaseline, createMuiTheme } from '@material-ui/core'
+import themes from './constants/theme'
+
 export const App = (): JSX.Element => {
 	const { authUser, loading } = useSelector<AppState, AuthState>(store => store.authReducer)
-
+	const { theme } = useSelector<AppState, LayoutState>(store => store.layoutReducer)
 	const dispatchAuth = useDispatch<AuthDispatch>()
 	const dispatchLayout = useDispatch<LayoutDispatch>()
+
+	const MuiTheme = createMuiTheme(theme === 'lightTheme' ? themes.lightTheme : themes.darkTheme)
 
 	useQuery<{ verifyToken: User }>(VERIFY_TOKEN, {
 		onError: e => {
@@ -46,11 +50,12 @@ export const App = (): JSX.Element => {
 	if (loading) return <Loading />
 
 	return (
-		<div>
+		<MuiThemeProvider theme={MuiTheme}>
+			<CssBaseline />
 			<Switch>
-				<Route exact path={HOME} component={() => <Home authUser={authUser}/>} />
+				<Route exact path={HOME} component={() => <Home authUser={authUser} />} />
 			</Switch>
-		</div>
+		</MuiThemeProvider>
 	)
 }
 
