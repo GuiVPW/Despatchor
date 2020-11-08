@@ -28,7 +28,25 @@ const resolvers = {
 			})
 			return user
 		},
-		users: async (): Promise<User[]> => prisma.user.findMany()
+		users: async (): Promise<User[]> => prisma.user.findMany(),
+		verifyToken: async (_, __, { req }): Promise<User> => {
+			const Authorization = req.get('Authorization')
+			if (Authorization) {
+				const token = Authorization.replace('Bearer ', '')
+				const tokenObject = verify(token, process.env.SECRET)
+
+				if (!tokenObject) throw new AuthenticationError('Token não é válido')
+
+				if (typeof tokenObject === 'object') {
+					const user = await prisma.user.findOne({
+						where: { id: token.id }
+					})
+
+					return user
+				}
+			}
+		}
+
 	},
 	Mutation: {
 		createUser: async (
@@ -89,7 +107,6 @@ const resolvers = {
 						email
 					}
 				})
-
 
 				if (!user) throw new AuthenticationError('Usuário não existe')
 

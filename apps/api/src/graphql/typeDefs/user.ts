@@ -4,6 +4,7 @@ export default gql`
 	extend type Query {
 		user(id: String): User! @auth
 		users: [User!]
+    verifyToken: User! @auth
 	}
 
 	extend type Mutation {
