@@ -41,7 +41,8 @@ export default gql`
 	}
 
   input AddLike {
-    id: String postId: String!
+    id: String
+    postId: String!
   }
 
 	type Post {
