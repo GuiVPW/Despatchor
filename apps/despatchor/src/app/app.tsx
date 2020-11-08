@@ -1,27 +1,15 @@
-import React, { useEffect, useState } from 'react'
-import { Message } from '@despatchor/api-interfaces'
+import React from 'react'
 
-export const App: React.FC = () => {
-	const [m, setMessage] = useState<Message>({ message: '' })
+import { Route, Switch } from 'react-router-dom'
+import { HOME } from './constants/routes'
 
-	useEffect(() => {
-		fetch('/api')
-			.then(r => r.json())
-			.then(setMessage)
-	}, [])
-
+export const App = (): JSX.Element => {
 	return (
-		<>
-			<div style={{ textAlign: 'center' }}>
-				<h1>Welcome to despatchor!</h1>
-				<img
-					width="450"
-					src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png"
-					alt="logo"
-				/>
-			</div>
-			<div>{m.message}</div>
-		</>
+		<div>
+			<Switch>
+				<Route component={() => <h1>Top</h1>} exatc path={HOME} />
+			</Switch>
+		</div>
 	)
 }
 
