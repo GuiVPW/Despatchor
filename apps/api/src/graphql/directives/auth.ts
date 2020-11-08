@@ -1,6 +1,6 @@
 import { AuthenticationError, SchemaDirectiveVisitor } from 'apollo-server-express'
 import { defaultFieldResolver } from 'graphql'
-import jwt from 'jsonwebtoken'
+import * as jwt from 'jsonwebtoken'
 
 class AuthDirective extends SchemaDirectiveVisitor {
 	public visitFieldDefinition(field: any) {

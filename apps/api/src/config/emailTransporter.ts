@@ -1,6 +1,6 @@
 import { createTransport } from 'nodemailer'
 import { config } from 'dotenv-safe'
-import jwt from 'jsonwebtoken'
+import * as jwt from 'jsonwebtoken'
 import oauth2Client from './google-api'
 
 import confirmationEmail from '../utils/emails/emailConfirmation'

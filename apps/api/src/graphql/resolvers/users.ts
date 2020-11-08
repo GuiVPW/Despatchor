@@ -1,5 +1,5 @@
 import { compare, hashSync } from 'bcryptjs'
-import { decode, sign, verify } from 'jsonwebtoken'
+import { sign, verify } from 'jsonwebtoken'
 import { storeUpload } from '../../utils/storeUpload'
 import { prisma } from '../../main'
 import sendEmail from '../../config/emailTransporter'
@@ -90,6 +90,7 @@ const resolvers = {
 					}
 				})
 
+
 				if (!user) throw new AuthenticationError('Usuário não existe')
 
 				if (user && !user.verifiedEmail) {
@@ -99,7 +100,7 @@ const resolvers = {
 						email: user.email
 					}
 					const send = await sendEmail({ ...userEmail, reason: 'Confirmation' })
-					if (!send) throw new AuthenticationError('Email não existe')
+					console.log(send)
 				}
 
 				if (!await compare(password, user.password))
@@ -127,6 +128,7 @@ const resolvers = {
 
 				return jwtToken
 			} catch (e) {
+				console.log(e)
 				throw new ValidationError('Não foi possível completar o Login')
 			}
 		},
@@ -155,11 +157,10 @@ const resolvers = {
 							name: user.name,
 							email: user.email
 						}
-						const send = await sendEmail({
+						await sendEmail({
 							...userEmail,
 							reason: 'Confirmation'
 						})
-						if (!send) throw new AuthenticationError('Email não existe')
 					}
 
 					const token = sign(

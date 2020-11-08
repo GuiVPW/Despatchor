@@ -1,15 +1,15 @@
-import * as express from 'express'
+import express, { NextFunction, Response, Request } from 'express'
 import { PrismaClient } from '@prisma/client'
 import resolvers from './graphql/resolvers'
-import * as path from 'path'
+import path from 'path'
 import { createServer } from 'http'
 import { HTTP_PORT } from './config/apollo'
 import { pubsub } from './constants/subscriptions'
-import { ApolloServer } from 'apollo-server-express'
+import { ApolloServer} from 'apollo-server-express'
 import typeDefs from './graphql/typeDefs'
 import { config } from 'dotenv-safe'
 import schemaDirectives from './graphql/directives'
-import * as cors from 'cors'
+import cors from 'cors'
 
 config()
 
@@ -17,7 +17,7 @@ export const app = express()
 
 export const prisma = new PrismaClient()
 
-app.use((_req, _res, next) => {
+app.use((_req: Request, _res: Response, next: NextFunction) => {
 	next()
 })
 

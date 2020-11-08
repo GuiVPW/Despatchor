@@ -4,9 +4,9 @@ import { prisma } from '../../main'
 import getAuthorId from './utils/getAuthorId'
 
 class CommentOrPostOwnerDirective extends SchemaDirectiveVisitor {
-	public visitFieldDefinition(field) {
+	public visitFieldDefinition(field): void {
 		const { resolve = defaultFieldResolver } = field
-		field.resolve = async (...args) => {
+		field.resolve = async (...args: any[]) => {
 			const [, { input: { authorId, postId, commentId } }, { req }] = args
 
 			const authorIdToken = getAuthorId(req)
