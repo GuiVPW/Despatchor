@@ -1,17 +1,17 @@
 import {
-  DMMF,
-  DMMFClass,
-  Engine,
-  PrismaClientKnownRequestError,
-  PrismaClientUnknownRequestError,
-  PrismaClientRustPanicError,
-  PrismaClientInitializationError,
-  PrismaClientValidationError,
-  sqltag as sql,
-  empty,
-  join,
-  raw,
-} from './runtime';
+	DMMF,
+	DMMFClass,
+	Engine,
+	PrismaClientKnownRequestError,
+	PrismaClientUnknownRequestError,
+	PrismaClientRustPanicError,
+	PrismaClientInitializationError,
+	PrismaClientValidationError,
+	sqltag as sql,
+	empty,
+	join,
+	raw
+} from './runtime'
 
 export { PrismaClientKnownRequestError }
 export { PrismaClientUnknownRequestError }
@@ -49,7 +49,7 @@ export declare type JsonObject = {[Key in string]?: JsonValue}
  * From https://github.com/sindresorhus/type-fest/
  * Matches a JSON array.
  */
-export declare interface JsonArray extends Array<JsonValue> {}
+export type JsonArray = Array<JsonValue>
  
 /**
  * From https://github.com/sindresorhus/type-fest/
@@ -62,7 +62,7 @@ export declare type JsonValue = string | number | boolean | null | JsonObject | 
  */
 export declare type InputJsonObject = {[Key in string]?: JsonValue}
  
-export declare interface InputJsonArray extends Array<JsonValue> {}
+export type InputJsonArray = Array<JsonValue>
  
 export declare type InputJsonValue = undefined |  string | number | boolean | null | InputJsonObject | InputJsonArray
 
@@ -90,7 +90,7 @@ declare type CheckSelect<T, S, U> = T extends SelectAndInclude
 /**
  * Get the type of the value, that the Promise holds.
  */
-export declare type PromiseType<T extends PromiseLike<any>> = T extends PromiseLike<infer U> ? U : T;
+export declare type PromiseType<T extends PromiseLike<any>> = T extends PromiseLike<infer U> ? U : T
 
 /**
  * Get the return type of a function which returns a Promise.
@@ -98,7 +98,7 @@ export declare type PromiseType<T extends PromiseLike<any>> = T extends PromiseL
 export declare type PromiseReturnType<T extends (...args: any) => Promise<any>> = PromiseType<ReturnType<T>>
 
 
-export declare type Enumerable<T> = T | Array<T>;
+export declare type Enumerable<T> = T | Array<T>
 
 export type RequiredKeys<T> = {
   [K in keyof T]-?: {} extends Pick<T, K> ? never : K
@@ -116,11 +116,11 @@ export declare type TrueKeys<T> = TruthyKeys<Pick<T, RequiredKeys<T>>>
  */
 export declare type Subset<T, U> = {
   [key in keyof T]: key extends keyof U ? T[key] : never;
-};
+}
 declare class PrismaClientFetcher {
-  private readonly prisma;
-  private readonly debug;
-  private readonly hooks?;
+  private readonly prisma
+  private readonly debug
+  private readonly hooks?
   constructor(prisma: PrismaClient<any, any>, debug?: boolean, hooks?: Hooks | undefined);
   request<T>(document: any, dataPath?: string[], rootField?: string, typeName?: string, isList?: boolean, callsite?: string): Promise<T>;
   sanitizeMessage(message: string): string;
@@ -238,7 +238,7 @@ export type Middleware<T = any> = (
 ) => Promise<T>
 
 // tested in getLogLevel.test.ts
-export declare function getLogLevel(log: Array<LogLevel | LogDefinition>): LogLevel | undefined;
+export declare function getLogLevel(log: Array<LogLevel | LogDefinition>): LogLevel | undefined
 
 /**
  * ##  Prisma Client ʲˢ
@@ -261,35 +261,35 @@ export declare class PrismaClient<
   /**
    * @private
    */
-  private fetcher;
+  private fetcher
   /**
    * @private
    */
-  private readonly dmmf;
+  private readonly dmmf
   /**
    * @private
    */
-  private connectionPromise?;
+  private connectionPromise?
   /**
    * @private
    */
-  private disconnectionPromise?;
+  private disconnectionPromise?
   /**
    * @private
    */
-  private readonly engineConfig;
+  private readonly engineConfig
   /**
    * @private
    */
-  private readonly measurePerformance;
+  private readonly measurePerformance
   /**
    * @private
    */
-  private engine: Engine;
+  private engine: Engine
   /**
    * @private
    */
-  private errorFormat: ErrorFormat;
+  private errorFormat: ErrorFormat
 
   /**
    * ##  Prisma Client ʲˢ
@@ -448,7 +448,7 @@ export declare const UserDistinctFieldEnum: {
   bio: 'bio',
   verifiedEmail: 'verifiedEmail',
   createdAt: 'createdAt'
-};
+}
 
 export declare type UserDistinctFieldEnum = (typeof UserDistinctFieldEnum)[keyof typeof UserDistinctFieldEnum]
 
@@ -462,7 +462,7 @@ export declare const PostDistinctFieldEnum: {
   postImageUrl: 'postImageUrl',
   likes: 'likes',
   createdAt: 'createdAt'
-};
+}
 
 export declare type PostDistinctFieldEnum = (typeof PostDistinctFieldEnum)[keyof typeof PostDistinctFieldEnum]
 
@@ -471,7 +471,7 @@ export declare const PostsLikeDistinctFieldEnum: {
   id: 'id',
   postId: 'postId',
   userId: 'userId'
-};
+}
 
 export declare type PostsLikeDistinctFieldEnum = (typeof PostsLikeDistinctFieldEnum)[keyof typeof PostsLikeDistinctFieldEnum]
 
@@ -482,7 +482,7 @@ export declare const CommentDistinctFieldEnum: {
   postId: 'postId',
   comment: 'comment',
   createdAt: 'createdAt'
-};
+}
 
 export declare type CommentDistinctFieldEnum = (typeof CommentDistinctFieldEnum)[keyof typeof CommentDistinctFieldEnum]
 
@@ -490,7 +490,7 @@ export declare type CommentDistinctFieldEnum = (typeof CommentDistinctFieldEnum)
 export declare const SortOrder: {
   asc: 'asc',
   desc: 'desc'
-};
+}
 
 export declare type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
@@ -498,7 +498,7 @@ export declare type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 export declare const QueryMode: {
   default: 'default',
   insensitive: 'insensitive'
-};
+}
 
 export declare type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 
@@ -803,20 +803,20 @@ export interface UserDelegate {
  * https://github.com/prisma/prisma-client-js/issues/707
  */
 export declare class Prisma__UserClient<T> implements Promise<T> {
-  private readonly _dmmf;
-  private readonly _fetcher;
-  private readonly _queryType;
-  private readonly _rootField;
-  private readonly _clientMethod;
-  private readonly _args;
-  private readonly _dataPath;
-  private readonly _errorFormat;
-  private readonly _measurePerformance?;
-  private _isList;
-  private _callsite;
-  private _requestPromise?;
+  private readonly _dmmf
+  private readonly _fetcher
+  private readonly _queryType
+  private readonly _rootField
+  private readonly _clientMethod
+  private readonly _args
+  private readonly _dataPath
+  private readonly _errorFormat
+  private readonly _measurePerformance?
+  private _isList
+  private _callsite
+  private _requestPromise?
   constructor(_dmmf: DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
-  readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+  readonly [Symbol.toStringTag]: 'PrismaClientPromise'
 
   posts<T extends FindManyPostArgs = {}>(args?: Subset<T, FindManyPostArgs>): CheckSelect<T, Promise<Array<Post>>, Promise<Array<PostGetPayload<T>>>>;
 
@@ -1364,20 +1364,20 @@ export interface PostDelegate {
  * https://github.com/prisma/prisma-client-js/issues/707
  */
 export declare class Prisma__PostClient<T> implements Promise<T> {
-  private readonly _dmmf;
-  private readonly _fetcher;
-  private readonly _queryType;
-  private readonly _rootField;
-  private readonly _clientMethod;
-  private readonly _args;
-  private readonly _dataPath;
-  private readonly _errorFormat;
-  private readonly _measurePerformance?;
-  private _isList;
-  private _callsite;
-  private _requestPromise?;
+  private readonly _dmmf
+  private readonly _fetcher
+  private readonly _queryType
+  private readonly _rootField
+  private readonly _clientMethod
+  private readonly _args
+  private readonly _dataPath
+  private readonly _errorFormat
+  private readonly _measurePerformance?
+  private _isList
+  private _callsite
+  private _requestPromise?
   constructor(_dmmf: DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
-  readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+  readonly [Symbol.toStringTag]: 'PrismaClientPromise'
 
   author<T extends UserArgs = {}>(args?: Subset<T, UserArgs>): CheckSelect<T, Prisma__UserClient<User | null>, Prisma__UserClient<UserGetPayload<T> | null>>;
 
@@ -1909,20 +1909,20 @@ export interface PostsLikeDelegate {
  * https://github.com/prisma/prisma-client-js/issues/707
  */
 export declare class Prisma__PostsLikeClient<T> implements Promise<T> {
-  private readonly _dmmf;
-  private readonly _fetcher;
-  private readonly _queryType;
-  private readonly _rootField;
-  private readonly _clientMethod;
-  private readonly _args;
-  private readonly _dataPath;
-  private readonly _errorFormat;
-  private readonly _measurePerformance?;
-  private _isList;
-  private _callsite;
-  private _requestPromise?;
+  private readonly _dmmf
+  private readonly _fetcher
+  private readonly _queryType
+  private readonly _rootField
+  private readonly _clientMethod
+  private readonly _args
+  private readonly _dataPath
+  private readonly _errorFormat
+  private readonly _measurePerformance?
+  private _isList
+  private _callsite
+  private _requestPromise?
   constructor(_dmmf: DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
-  readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+  readonly [Symbol.toStringTag]: 'PrismaClientPromise'
 
   post<T extends PostArgs = {}>(args?: Subset<T, PostArgs>): CheckSelect<T, Prisma__PostClient<Post | null>, Prisma__PostClient<PostGetPayload<T> | null>>;
 
@@ -2456,20 +2456,20 @@ export interface CommentDelegate {
  * https://github.com/prisma/prisma-client-js/issues/707
  */
 export declare class Prisma__CommentClient<T> implements Promise<T> {
-  private readonly _dmmf;
-  private readonly _fetcher;
-  private readonly _queryType;
-  private readonly _rootField;
-  private readonly _clientMethod;
-  private readonly _args;
-  private readonly _dataPath;
-  private readonly _errorFormat;
-  private readonly _measurePerformance?;
-  private _isList;
-  private _callsite;
-  private _requestPromise?;
+  private readonly _dmmf
+  private readonly _fetcher
+  private readonly _queryType
+  private readonly _rootField
+  private readonly _clientMethod
+  private readonly _args
+  private readonly _dataPath
+  private readonly _errorFormat
+  private readonly _measurePerformance?
+  private _isList
+  private _callsite
+  private _requestPromise?
   constructor(_dmmf: DMMFClass, _fetcher: PrismaClientFetcher, _queryType: 'query' | 'mutation', _rootField: string, _clientMethod: string, _args: any, _dataPath: string[], _errorFormat: ErrorFormat, _measurePerformance?: boolean | undefined, _isList?: boolean);
-  readonly [Symbol.toStringTag]: 'PrismaClientPromise';
+  readonly [Symbol.toStringTag]: 'PrismaClientPromise'
 
   author<T extends UserArgs = {}>(args?: Subset<T, UserArgs>): CheckSelect<T, Prisma__UserClient<User | null>, Prisma__UserClient<UserGetPayload<T> | null>>;
 
@@ -3562,5 +3562,5 @@ export type BatchPayload = {
 /**
  * DMMF
  */
-export declare const dmmf: DMMF.Document;
-export {};
+export declare const dmmf: DMMF.Document
+export {}
