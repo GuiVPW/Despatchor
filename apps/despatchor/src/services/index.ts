@@ -5,6 +5,8 @@ import {createUploadLink} from 'apollo-upload-client'
 
 import baseUrl from '../app/constants/apiUrl'
 
+const token = localStorage.getItem('token')
+
 const wsLink = new WebSocketLink({
 	uri: `ws://${baseUrl.split('//')[1]}/graphql`,
 	options: {
@@ -12,7 +14,12 @@ const wsLink = new WebSocketLink({
 	}
 })
 
-const uploadLink = createUploadLink({ uri: `${baseUrl}/graphql` })
+const uploadLink = createUploadLink({
+	headers: {
+		'Authorization': token
+	},
+	uri: `${baseUrl}/graphql`
+})
 
 export const splitLink = split(
 	({ query }) => {
