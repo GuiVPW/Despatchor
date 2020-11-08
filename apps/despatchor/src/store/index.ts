@@ -5,8 +5,8 @@ import {AuthState} from './reducers/auth/types'
 import {LayoutState} from './reducers/layout/types'
 
 export interface AppState {
-  auth: AuthState,
-  layout: LayoutState
+  authReducer: AuthState,
+  layoutReducer: LayoutState
 }
 
 const store: Store<AppState> = createStore(

@@ -2,7 +2,8 @@ import { Reducer } from 'redux'
 import { AuthState, AuthTypes } from './types'
 
 const INITIAL_STATES: AuthState = {
-	authUser: null, loading: true
+	authUser: null,
+	loading: true
 }
 
 const authReducer: Reducer<AuthState, AuthTypes> = (
