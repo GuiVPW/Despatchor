@@ -1,13 +1,22 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { createStore, Store } from 'redux'
-import { RootReducer } from './reducers'
-import { ConstantsState } from './reducers/constants/types'
+import { rootReducer } from './reducers'
+import {AuthState} from './reducers/auth/types'
+import {LayoutState} from './reducers/layout/types'
 
 export interface AppState {
-  constants: ConstantsState
+  auth: AuthState,
+  layout: LayoutState
 }
-// @ts-ignore
-const store: Store<AppState> = createStore(RootReducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__({
-	trace: true
-}))
+
+const store: Store<AppState> = createStore(
+	rootReducer,
+	// @ts-ignore
+	window.__REDUX_DEVTOOLS_EXTENSION__ &&
+		// @ts-ignore
+		window.__REDUX_DEVTOOLS_EXTENSION__({
+			trace: true
+		})
+)
 
 export default store
