@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { createStore, Store } from 'redux'
 import { rootReducer } from './reducers'
-import {AuthState} from './reducers/auth/types'
-import {LayoutState} from './reducers/layout/types'
+import { AuthState } from './reducers/auth/types'
+import { LangState } from './reducers/lang/types'
+import { LayoutState } from './reducers/layout/types'
 
 export interface AppState {
   authReducer: AuthState,
-  layoutReducer: LayoutState
+  layoutReducer: LayoutState,
+  langReducer: LangState
 }
 
 const store: Store<AppState> = createStore(

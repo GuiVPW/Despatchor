@@ -18,9 +18,16 @@ import Loading from './components/Loading'
 import { MuiThemeProvider, CssBaseline, createMuiTheme } from '@material-ui/core'
 import themes from './constants/theme'
 
+import { IntlProvider } from 'react-intl'
+import langs from '../lang'
+import { LangState } from '../store/reducers/lang/types'
+import Footer from './components/Footer'
+
 export const App = (): JSX.Element => {
 	const { authUser, loading } = useSelector<AppState, AuthState>(store => store.authReducer)
 	const { theme } = useSelector<AppState, LayoutState>(store => store.layoutReducer)
+	const { locale } = useSelector<AppState, LangState>(store => store.langReducer)
+
 	const dispatchAuth = useDispatch<AuthDispatch>()
 	const dispatchLayout = useDispatch<LayoutDispatch>()
 
@@ -51,10 +58,13 @@ export const App = (): JSX.Element => {
 
 	return (
 		<MuiThemeProvider theme={MuiTheme}>
-			<CssBaseline />
-			<Switch>
-				<Route exact path={HOME} component={() => <Home authUser={authUser} />} />
-			</Switch>
+			<IntlProvider messages={langs[locale]} locale="pt-BR" defaultLocale="pt-BR">
+				<CssBaseline />
+				<Switch>
+					<Route exact path={HOME} component={() => <Home authUser={authUser} />} />
+				</Switch>
+				<Footer />
+			</IntlProvider>
 		</MuiThemeProvider>
 	)
 }
