@@ -136,4 +136,4 @@ const darkTheme: ThemeOptions = {
 	}
 }
 
-export default {darkTheme, lightTheme}
+export default { darkTheme, lightTheme }

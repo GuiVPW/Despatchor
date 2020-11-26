@@ -19,7 +19,7 @@ export default gql`
 
 	input CommentDeletion {
 		commentId: String!
-    postId: String!
+		postId: String!
 		authorId: String!
 	}
 

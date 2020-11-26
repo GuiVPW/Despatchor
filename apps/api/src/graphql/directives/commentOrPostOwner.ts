@@ -7,7 +7,13 @@ class CommentOrPostOwnerDirective extends SchemaDirectiveVisitor {
 	public visitFieldDefinition(field): void {
 		const { resolve = defaultFieldResolver } = field
 		field.resolve = async (...args: any[]) => {
-			const [, { input: { authorId, postId, commentId } }, { req }] = args
+			const [
+				,
+				{
+					input: { authorId, postId, commentId }
+				},
+				{ req }
+			] = args
 
 			const authorIdToken = getAuthorId(req)
 
@@ -31,7 +37,6 @@ class CommentOrPostOwnerDirective extends SchemaDirectiveVisitor {
 						'Apenas o dono do comentário ou do post pode fazer essa ação'
 					)
 			}
-
 
 			return resolve.apply(this, args)
 		}

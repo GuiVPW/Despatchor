@@ -5,8 +5,7 @@ export interface Auth {
 	emailVerified: boolean
 }
 
-
 export interface UserInput {
-  id?: string
-  email?: string
+	id?: string
+	email?: string
 }

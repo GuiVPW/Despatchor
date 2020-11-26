@@ -22,7 +22,6 @@ export default gql`
 		postRemoved: Int
 	}
 
-
 	input PostCreation {
 		authorId: String!
 		title: String!
@@ -30,9 +29,9 @@ export default gql`
 		imageUrl: Upload
 	}
 
-  input PostRemove {
-    postId: String!
-  }
+	input PostRemove {
+		postId: String!
+	}
 
 	input PostEdition {
 		id: String
@@ -40,10 +39,10 @@ export default gql`
 		description: String
 	}
 
-  input AddLike {
-    id: String
-    postId: String!
-  }
+	input AddLike {
+		id: String
+		postId: String!
+	}
 
 	type Post {
 		id: String

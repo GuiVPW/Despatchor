@@ -4,7 +4,7 @@ import { Redirect, Route, RouteProps } from 'react-router-dom'
 import { HOME } from '../../constants/routes'
 
 interface AuthProps {
-  authUser: User | null
+	authUser: User | null
 }
 
 const PrivateRoute: React.FC<AuthProps & RouteProps> = ({ authUser, ...rest }) => {

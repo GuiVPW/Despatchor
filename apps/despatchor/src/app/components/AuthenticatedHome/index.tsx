@@ -16,7 +16,7 @@ import Post from '../../components/Posts/Post'
 import postContent from '../../components/Posts/postsItems'
 
 interface Props {
-  authUser: User
+	authUser: User
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -61,9 +61,9 @@ const AuthenticatedHome = ({ authUser }: Props) => {
 					</Typography>
 				</Button>
 				<Grid container item lg={12}>
-					{postContent.map(props =>
+					{postContent.map(props => (
 						<Post {...props} />
-					)}
+					))}
 				</Grid>
 			</Grid>
 		</Container>

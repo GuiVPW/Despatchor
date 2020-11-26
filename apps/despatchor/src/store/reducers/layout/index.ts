@@ -8,30 +8,33 @@ const INITIAL_STATES: LayoutState = {
 	theme: 'lightTheme'
 }
 
-const layoutReducer: Reducer<LayoutState, LayoutTypes> = (state = INITIAL_STATES, { type, payload }) => {
+const layoutReducer: Reducer<LayoutState, LayoutTypes> = (
+	state = INITIAL_STATES,
+	{ type, payload }
+) => {
 	switch (type) {
-			case 'TOOGLE_NAVBAR':
-				return {
-					...state,
-					navbar: typeof payload === 'boolean' ? payload : state.navbar
-				}
-			case 'CHANGE_NAVBAR':
-				return {
-					...state,
-					theme: typeof payload === 'string' ? payload : state.navbarType
-				}
-			case 'CHANGE_THEME':
-				return {
-					...state,
-					theme: typeof payload === 'string' ? payload : state.navbar
-				}
-			case 'CHANGE_FOOTER':
-				return {
-					...state,
-					footer: typeof payload === 'boolean' ? payload : state.footer
-				}
-			default:
-				return state
+		case 'TOOGLE_NAVBAR':
+			return {
+				...state,
+				navbar: typeof payload === 'boolean' ? payload : state.navbar
+			}
+		case 'CHANGE_NAVBAR':
+			return {
+				...state,
+				theme: typeof payload === 'string' ? payload : state.navbarType
+			}
+		case 'CHANGE_THEME':
+			return {
+				...state,
+				theme: typeof payload === 'string' ? payload : state.navbar
+			}
+		case 'CHANGE_FOOTER':
+			return {
+				...state,
+				footer: typeof payload === 'boolean' ? payload : state.footer
+			}
+		default:
+			return state
 	}
 }
 

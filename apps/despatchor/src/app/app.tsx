@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 import { AppState } from '../store'
 import { useDispatch, useSelector } from 'react-redux'
@@ -16,6 +16,7 @@ import Home from './pages/Home'
 import Loading from './components/Loading'
 
 import { MuiThemeProvider, CssBaseline, createMuiTheme } from '@material-ui/core'
+import * as MUILocales from '@material-ui/core/locale'
 import themes from './constants/theme'
 
 import { IntlProvider } from 'react-intl'
@@ -23,15 +24,22 @@ import langs from '../lang'
 import { LangState } from '../store/reducers/lang/types'
 import Footer from './components/Footer'
 
+type SupportedLocales = keyof typeof MUILocales
+
 export const App = (): JSX.Element => {
 	const { authUser, loading } = useSelector<AppState, AuthState>(store => store.authReducer)
 	const { theme } = useSelector<AppState, LayoutState>(store => store.layoutReducer)
 	const { locale } = useSelector<AppState, LangState>(store => store.langReducer)
 
+	const [locales, setLocales] = useState<SupportedLocales>(locale)
+
 	const dispatchAuth = useDispatch<AuthDispatch>()
 	const dispatchLayout = useDispatch<LayoutDispatch>()
 
-	const MuiTheme = createMuiTheme(theme === 'lightTheme' ? themes.lightTheme : themes.darkTheme)
+	const MuiTheme = createMuiTheme(
+		theme === 'lightTheme' ? themes.lightTheme : themes.darkTheme,
+		locales[locale]
+	)
 
 	useQuery<{ verifyToken: User }>(VERIFY_TOKEN, {
 		onError: e => {
@@ -42,7 +50,7 @@ export const App = (): JSX.Element => {
 			if (data) {
 				if (authUser === null) {
 					dispatchAuth({ type: 'CHANGE_AUTHENTICATION', payload: data.verifyToken })
-					dispatchLayout({type: 'CHANGE_NAVBAR', payload: true})
+					dispatchLayout({ type: 'CHANGE_NAVBAR', payload: true })
 					if (!data.verifyToken.verifiedEmail) {
 						alert('Confirme seu email!')
 					}

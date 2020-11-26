@@ -16,7 +16,7 @@ const resolvers = {
 	Query: {
 		user: async (
 			_,
-			{ id }: {id: string}
+			{ id }: { id: string }
 		): Promise<
 			User & {
 				posts: Post[]
@@ -39,7 +39,7 @@ const resolvers = {
 				if (!tokenObject) throw new AuthenticationError('Token não é válido')
 
 				if (typeof tokenObject === 'object') {
-					const {id}: Pick<JWTTokenPayload, 'id'> = tokenObject
+					const { id }: Pick<JWTTokenPayload, 'id'> = tokenObject
 					const user = await prisma.user.findOne({
 						where: { id }
 					})
@@ -48,7 +48,6 @@ const resolvers = {
 				}
 			}
 		}
-
 	},
 	Mutation: {
 		createUser: async (
@@ -122,7 +121,7 @@ const resolvers = {
 					console.log(send)
 				}
 
-				if (!await compare(password, user.password))
+				if (!(await compare(password, user.password)))
 					throw new AuthenticationError('Senha incorreta')
 
 				const token = sign(
@@ -303,7 +302,7 @@ const resolvers = {
 
 				const bcryptedNewPassword = hashSync(newPassword, 10)
 
-				if (!await compare(oldPassword, isUser.password))
+				if (!(await compare(oldPassword, isUser.password)))
 					throw new AuthenticationError('Senha incorreta')
 
 				if (await compare(newPassword, isUser.password))

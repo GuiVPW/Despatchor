@@ -11,12 +11,13 @@ const authReducer: Reducer<AuthState, AuthTypes> = (
 	{ type, payload }
 ) => {
 	switch (type) {
-			case 'CHANGE_AUTHENTICATION':
-				return {
-					authUser: payload, loading: false
-				}
-			default:
-				return state
+		case 'CHANGE_AUTHENTICATION':
+			return {
+				authUser: payload,
+				loading: false
+			}
+		default:
+			return state
 	}
 }
 

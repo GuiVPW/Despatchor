@@ -10,12 +10,12 @@ const langReducer: Reducer<LangState, LangTypes> = (
 	{ type, payload }
 ) => {
 	switch (type) {
-			case 'SELECT_LANG':
-				return {
-					locale: typeof payload === 'string' ? payload : state.locale
-				}
-			default:
-				return state
+		case 'SELECT_LANG':
+			return {
+				locale: typeof payload === 'string' ? payload : state.locale
+			}
+		default:
+			return state
 	}
 }
 

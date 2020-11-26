@@ -7,11 +7,11 @@ export interface JWTToken {
 }
 
 export interface JWTTokenPayload {
-  readonly id?: string
-  email: string
-  image: string
-  iat: number
-  exp: number
+	readonly id?: string
+	email: string
+	image: string
+	iat: number
+	exp: number
 }
 
 export interface LoginPayload {

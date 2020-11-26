@@ -1,7 +1,7 @@
 module.exports = {
-  projects: [
-    '<rootDir>/apps/despatchor',
-    '<rootDir>/apps/api',
-    '<rootDir>/libs/api-interfaces',
-  ],
-};
+	projects: [
+		'<rootDir>/apps/despatchor',
+		'<rootDir>/apps/api',
+		'<rootDir>/libs/api-interfaces'
+	]
+}

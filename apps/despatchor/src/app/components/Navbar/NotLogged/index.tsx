@@ -1,5 +1,5 @@
 import React from 'react'
-import {Typography} from '@material-ui/core'
+import { Typography } from '@material-ui/core'
 
 interface Props {
 	type: 'login' | 'signup'
@@ -8,7 +8,7 @@ interface Props {
 const NotLoggedNavbar = ({ type }: Props): JSX.Element => {
 	return (
 		<Typography color={type === 'login' ? 'textPrimary' : 'textSecondary'} variant="h3">
-        Despatchor
+			Despatchor
 		</Typography>
 	)
 }

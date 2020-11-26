@@ -9,12 +9,7 @@ import { EmailSender } from '../types/email'
 
 config()
 
-const sendEmail = async ({
-	email,
-	id,
-	name,
-	reason
-}: EmailSender): Promise<void> => {
+const sendEmail = async ({ email, id, name, reason }: EmailSender): Promise<void> => {
 	const { token: accessToken } = await oauth2Client.getAccessToken()
 
 	const smtpTransport = createTransport({
@@ -53,7 +48,6 @@ const sendEmail = async ({
 				}
 			}
 		)
-
 	} else if (reason === 'PasswordReset') {
 		smtpTransport.sendMail(
 			{

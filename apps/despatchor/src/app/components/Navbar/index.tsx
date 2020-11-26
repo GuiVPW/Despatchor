@@ -15,7 +15,7 @@ const Navbar = (): JSX.Element => {
 	if (authUser !== null) {
 		return <LoggedNavbar id={authUser.id} avatarUrl={authUser.avatarUrl} />
 	} else {
-		return <NotLoggedNavbar type={navbarType}/>
+		return <NotLoggedNavbar type={navbarType} />
 	}
 }
 

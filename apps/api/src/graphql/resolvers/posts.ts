@@ -166,7 +166,7 @@ const resolvers = {
 			}
 		},
 
-		addLike: async (_, { input: { id, postId }}) => {
+		addLike: async (_, { input: { id, postId } }) => {
 			try {
 				const post = await prisma.post.findOne({
 					where: {
@@ -182,7 +182,7 @@ const resolvers = {
 						userId: id
 					}
 				})
-        
+
 				if (postLiked.length !== 0) {
 					const removeLike = await prisma.post.update({
 						data: {

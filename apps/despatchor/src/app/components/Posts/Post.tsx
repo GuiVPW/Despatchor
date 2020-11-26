@@ -14,17 +14,14 @@ import {
 	Divider
 } from '@material-ui/core'
 
-import {
-	FavoriteBorderRounded,
-	ChatBubbleOutlineOutlined
-} from '@material-ui/icons'
+import { FavoriteBorderRounded, ChatBubbleOutlineOutlined } from '@material-ui/icons'
 
 export interface PostType {
-  image: string
-  userImage: string
-  userName: string
-  likes: number
-  descriptions: string
+	image: string
+	userImage: string
+	userName: string
+	likes: number
+	descriptions: string
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -48,13 +45,7 @@ const useStyles = makeStyles((theme: Theme) =>
 	})
 )
 
-const Posts: React.FC<PostType> = ({
-	image,
-	userImage,
-	userName,
-	likes,
-	descriptions
-}) => {
+const Posts: React.FC<PostType> = ({ image, userImage, userName, likes, descriptions }) => {
 	const classes = useStyles()
 	return (
 		<Grid container item lg={12}>
