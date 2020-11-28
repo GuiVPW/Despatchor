@@ -39,6 +39,8 @@ Thumbs.db
 # dependencies
 /.pnp
 .pnp.js
+.VSCodeCounter/*
+.VSCodeCounter/details.md
 
 # testing
 /coverage
@@ -53,3 +55,7 @@ Thumbs.db
 .env.development.local
 .env.test.local
 .env.production.local
+
+#database
+/prisma/
+

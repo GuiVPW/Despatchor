@@ -1,0 +1,12 @@
+overwrite: true
+documents: 'libs/queries/src/lib/*.ts'
+schema:
+  - https://localhost:4000/graphql
+generates:
+  ./apps/despatchor/src/app/constants/queries:
+    config:
+      enumsAsTypes: true
+    plugins:
+      - typescript
+      - typescript-operations
+      - typescript-react-apollo
